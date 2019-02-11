@@ -15,7 +15,7 @@ public class RunClient {
         Client client = new Client();
         String getResponse = null;
         try {
-            getResponse = client.doGetRequest("http://localhost:8080/");
+            getResponse = client.doGetRequest("http://localhost:8080");
         } catch (
                 IOException e) {
             e.printStackTrace();

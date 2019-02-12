@@ -17,15 +17,15 @@ import java.util.StringTokenizer;
 // The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class JavaHTTPServer implements Runnable{
+public class JavaHTTPServer {
 
     /*** Sätter resources root till rätt mapp.*/
     ClassLoader classLoader = getClass().getClassLoader();
     final File WEB_ROOT = new File(classLoader.getResource("").getFile());
 
-    static final String DEFAULT_FILE = "index.html";
+    //static final String DEFAULT_FILE = "index.html";
     static final String FILE_NOT_FOUND = "404.html";
-    static final String METHOD_NOT_SUPPORTED = "not_supported.html";
+    //static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
     static final int PORT = 8080;
 
@@ -65,7 +65,7 @@ public class JavaHTTPServer implements Runnable{
     }
 
 
-
+/*
     @Override
     public void run() {
         // we manage our particular client connection
@@ -171,7 +171,8 @@ public class JavaHTTPServer implements Runnable{
 
 
     }
-
+*/
+/*
     private byte[] readFileData(File file, int fileLength) throws IOException {
         FileInputStream fileIn = null;
         byte[] fileData = new byte[fileLength];
@@ -186,7 +187,8 @@ public class JavaHTTPServer implements Runnable{
 
         return fileData;
     }
-
+*/
+/*
     // return supported MIME Types
     private String getContentType(String fileRequested) {
         if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
@@ -194,7 +196,9 @@ public class JavaHTTPServer implements Runnable{
         else
             return "text/plain";
     }
+*/
 
+/*
     private void fileNotFound(PrintWriter out, OutputStream dataOut, String fileRequested) throws IOException {
         File file = new File(WEB_ROOT, FILE_NOT_FOUND);
         int fileLength = (int) file.length();
@@ -216,5 +220,6 @@ public class JavaHTTPServer implements Runnable{
             System.out.println("File " + fileRequested + " not found");
         }
     }
+    */
 
 }

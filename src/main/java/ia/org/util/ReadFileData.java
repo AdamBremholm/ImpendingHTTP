@@ -24,7 +24,7 @@ public class ReadFileData {
         return fileData;
     }
 
-    private String getContentType(String fileRequested) {
+    public String getContentType(String fileRequested) {
         if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
             return "text/html";
         else if (fileRequested.endsWith(".css")) {

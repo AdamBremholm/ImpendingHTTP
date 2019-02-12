@@ -1,5 +1,7 @@
 package ia.org.util;
 
+import com.mongodb.gridfs.CLI;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,7 +11,7 @@ import java.util.Date;
 // The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class JavaHTTPServer implements Runnable {
+public class JavaHTTPServer  {
 
     ClientConnection clientConnection;
     /*** Sätter resources root till rätt mapp.*/
@@ -19,12 +21,6 @@ public class JavaHTTPServer implements Runnable {
     // verbose mode
     static final boolean verbose = true;
 
-    // Client Connection via Socket Class
-    public Socket connect;
-
-    public JavaHTTPServer(Socket c) {
-        connect = c;
-    }
 
     public static void startServer() {
 
@@ -34,14 +30,14 @@ public class JavaHTTPServer implements Runnable {
 
             // we listen until user halts server execution
             while (true) {
-                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
+                ClientConnection client = new ClientConnection(serverConnect.accept());
 
                 if (verbose) {
                     System.out.println("Connecton opened. (" + new Date() + ")");
                 }
 
                 // create dedicated thread to manage the client connection
-                Thread thread = new Thread(myServer);
+                Thread thread = new Thread(client);
                 thread.start();
             }
 
@@ -49,11 +45,6 @@ public class JavaHTTPServer implements Runnable {
             System.err.println("Server Connection error : " + e.getMessage());
         }
 
-    }
-
-    @Override
-    public void run() {
-        clientConnection.run();
     }
 
 

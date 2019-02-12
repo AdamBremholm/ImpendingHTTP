@@ -15,8 +15,8 @@ public class ClientConnection implements Runnable {
     public ClientConnection(Socket c) {
         connect = c;
     }
-    ResourceConfig resourceConfig;
-    ReadFileData readFileData;
+
+    ReadFileData readFileData = new ReadFileData();
 
     @Override
     public void run() {
@@ -49,7 +49,7 @@ public class ClientConnection implements Runnable {
                 }
 
                 // we return the not supported file to the client
-                File file = new File(resourceConfig.WEB_ROOT, ResourceConfig.METHOD_NOT_SUPPORTED);
+                File file = new File(ResourceConfig.WEB_ROOT, ResourceConfig.METHOD_NOT_SUPPORTED);
                 int fileLength = (int) file.length();
                 String contentMimeType = "text/html";
                 //read content to return to client
@@ -70,10 +70,10 @@ public class ClientConnection implements Runnable {
             } else {
                 // GET or HEAD method
                 if (fileRequested.endsWith("/")) {
-                    fileRequested += resourceConfig.DEFAULT_FILE;
+                    fileRequested += ResourceConfig.DEFAULT_FILE;
                 }
 
-                File file = new File(resourceConfig.WEB_ROOT, fileRequested);
+                File file = new File(ResourceConfig.WEB_ROOT, fileRequested);
                 int fileLength = (int) file.length();
                 String content = readFileData.getContentType(fileRequested);
 

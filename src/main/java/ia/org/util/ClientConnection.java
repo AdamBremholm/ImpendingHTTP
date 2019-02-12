@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 public class ClientConnection implements Runnable {
 
     static final boolean verbose = true;
-    private Socket connect;
+    JavaHTTPServer javaHTTPServer;
 
     ResourceConfig resourceConfig;
     ReadFileData readFileData;
@@ -23,11 +23,11 @@ public class ClientConnection implements Runnable {
 
         try {
             // we read characters from the client via input stream on the socket
-            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(javaHTTPServer.connect.getInputStream()));
             // we get character output stream to client (for headers)
-            out = new PrintWriter(connect.getOutputStream());
+            out = new PrintWriter(javaHTTPServer.connect.getOutputStream());
             // get binary output stream to client (for requested data)
-            dataOut = new BufferedOutputStream(connect.getOutputStream());
+            dataOut = new BufferedOutputStream(javaHTTPServer.connect.getOutputStream());
 
             // get first line of the request from the client
             String input = in.readLine();
@@ -108,7 +108,7 @@ public class ClientConnection implements Runnable {
                 in.close();
                 out.close();
                 dataOut.close();
-                connect.close(); // we close socket connection
+                javaHTTPServer.connect.close(); // we close socket connection
             } catch (Exception e) {
                 System.err.println("Error closing stream : " + e.getMessage());
             }

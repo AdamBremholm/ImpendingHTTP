@@ -1,31 +1,18 @@
 package ia.org.util;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
-import java.util.StringTokenizer;
 
 // The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class JavaHTTPServer {
+public class JavaHTTPServer implements Runnable {
 
+    ClientConnection clientConnection;
     /*** Sätter resources root till rätt mapp.*/
-    ClassLoader classLoader = getClass().getClassLoader();
-    final File WEB_ROOT = new File(classLoader.getResource("").getFile());
-
-    //static final String DEFAULT_FILE = "index.html";
-    static final String FILE_NOT_FOUND = "404.html";
-    //static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
     static final int PORT = 8080;
 
@@ -33,7 +20,7 @@ public class JavaHTTPServer {
     static final boolean verbose = true;
 
     // Client Connection via Socket Class
-    private Socket connect;
+    public Socket connect;
 
     public JavaHTTPServer(Socket c) {
         connect = c;
@@ -62,6 +49,11 @@ public class JavaHTTPServer {
             System.err.println("Server Connection error : " + e.getMessage());
         }
 
+    }
+
+    @Override
+    public void run() {
+        clientConnection.run();
     }
 
 

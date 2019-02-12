@@ -19,8 +19,9 @@ import java.util.StringTokenizer;
 // The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class JavaHTTPServer implements Runnable{
+public class JavaHTTPServer  {
 
+    ClientConnection clientConnection;
     /*** Sätter resources root till rätt mapp.*/
 
     final File WEB_ROOT = new File("./webroot/");
@@ -34,12 +35,6 @@ public class JavaHTTPServer implements Runnable{
     // verbose mode
     static final boolean verbose = true;
 
-    // Client Connection via Socket Class
-    private Socket connect;
-
-    public JavaHTTPServer(Socket c) {
-        connect = c;
-    }
 
     public static void startServer() {
 
@@ -49,14 +44,14 @@ public class JavaHTTPServer implements Runnable{
 
             // we listen until user halts server execution
             while (true) {
-                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
+                ClientConnection client = new ClientConnection(serverConnect.accept());
 
                 if (verbose) {
                     System.out.println("Connecton opened. (" + new Date() + ")");
                 }
 
                 // create dedicated thread to manage the client connection
-                Thread thread = new Thread(myServer);
+                Thread thread = new Thread(client);
                 thread.start();
             }
 
@@ -199,7 +194,8 @@ public class JavaHTTPServer implements Runnable{
 
         return fileData;
     }
-
+*/
+/*
     // return supported MIME Types
     private String getContentType(String fileRequested) {
         if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
@@ -226,7 +222,9 @@ public class JavaHTTPServer implements Runnable{
         else
             return "text/plain";
     }
+*/
 
+/*
     private void fileNotFound(PrintWriter out, OutputStream dataOut, String fileRequested) throws IOException {
         File file = new File(WEB_ROOT, FILE_NOT_FOUND);
         int fileLength = (int) file.length();
@@ -248,5 +246,6 @@ public class JavaHTTPServer implements Runnable{
             System.out.println("File " + fileRequested + " not found");
         }
     }
+    */
 
 }

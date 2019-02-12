@@ -1,26 +1,43 @@
 package ia.org.util;
 
-import com.mongodb.gridfs.CLI;
-
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 // The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class JavaHTTPServer  {
+public class JavaHTTPServer implements Runnable{
 
-    ClientConnection clientConnection;
     /*** Sätter resources root till rätt mapp.*/
+
+    final File WEB_ROOT = new File("./webroot/");
+
+    static final String DEFAULT_FILE = "index.html";
+    static final String FILE_NOT_FOUND = "404.html";
+    static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
     static final int PORT = 8080;
 
     // verbose mode
     static final boolean verbose = true;
 
+    // Client Connection via Socket Class
+    private Socket connect;
+
+    public JavaHTTPServer(Socket c) {
+        connect = c;
+    }
 
     public static void startServer() {
 
@@ -30,14 +47,14 @@ public class JavaHTTPServer  {
 
             // we listen until user halts server execution
             while (true) {
-                ClientConnection client = new ClientConnection(serverConnect.accept());
+                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
 
                 if (verbose) {
                     System.out.println("Connecton opened. (" + new Date() + ")");
                 }
 
                 // create dedicated thread to manage the client connection
-                Thread thread = new Thread(client);
+                Thread thread = new Thread(myServer);
                 thread.start();
             }
 
@@ -48,7 +65,7 @@ public class JavaHTTPServer  {
     }
 
 
-/*
+
     @Override
     public void run() {
         // we manage our particular client connection
@@ -154,8 +171,7 @@ public class JavaHTTPServer  {
 
 
     }
-*/
-/*
+
     private byte[] readFileData(File file, int fileLength) throws IOException {
         FileInputStream fileIn = null;
         byte[] fileData = new byte[fileLength];
@@ -170,18 +186,34 @@ public class JavaHTTPServer  {
 
         return fileData;
     }
-*/
-/*
+
     // return supported MIME Types
     private String getContentType(String fileRequested) {
         if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
             return "text/html";
+        else if (fileRequested.endsWith(".css")) {
+            return "text/css";
+        }
+        else if (fileRequested.endsWith(".js")) {
+            return "text/javascript";
+        }
+        else if (fileRequested.endsWith(".pdf")) {
+            return "application/pdf";
+
+        }
+        else if (fileRequested.endsWith(".png")) {
+            return "image/png";
+
+        }
+        else if (fileRequested.endsWith(".jpg") || fileRequested.endsWith(".jpeg")) {
+            return "image/jpeg";
+
+        }
+
         else
             return "text/plain";
     }
-*/
 
-/*
     private void fileNotFound(PrintWriter out, OutputStream dataOut, String fileRequested) throws IOException {
         File file = new File(WEB_ROOT, FILE_NOT_FOUND);
         int fileLength = (int) file.length();
@@ -203,6 +235,5 @@ public class JavaHTTPServer  {
             System.out.println("File " + fileRequested + " not found");
         }
     }
-    */
 
 }

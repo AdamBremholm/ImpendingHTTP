@@ -1,11 +1,8 @@
 package ia.org.util;
 
-import com.mongodb.gridfs.CLI;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Date;
 
 // The tutorial can be found just here on the SSaurel's Blog :

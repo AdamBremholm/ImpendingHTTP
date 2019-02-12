@@ -22,8 +22,8 @@ import java.util.StringTokenizer;
 public class JavaHTTPServer implements Runnable{
 
     /*** Sätter resources root till rätt mapp.*/
-    ClassLoader classLoader = getClass().getClassLoader();
-    final File WEB_ROOT = new File(classLoader.getResource("").getFile());
+
+    final File WEB_ROOT = new File("./webroot/");
 
     static final String DEFAULT_FILE = "index.html";
     static final String FILE_NOT_FOUND = "404.html";
@@ -204,6 +204,25 @@ public class JavaHTTPServer implements Runnable{
     private String getContentType(String fileRequested) {
         if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
             return "text/html";
+        else if (fileRequested.endsWith(".css")) {
+            return "text/css";
+        }
+        else if (fileRequested.endsWith(".js")) {
+            return "text/javascript";
+        }
+        else if (fileRequested.endsWith(".pdf")) {
+            return "application/pdf";
+
+        }
+        else if (fileRequested.endsWith(".png")) {
+            return "image/png";
+
+        }
+        else if (fileRequested.endsWith(".jpg") || fileRequested.endsWith(".jpeg")) {
+            return "image/jpeg";
+
+        }
+
         else
             return "text/plain";
     }

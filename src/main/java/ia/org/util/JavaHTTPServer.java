@@ -1,5 +1,7 @@
 package ia.org.util;
 
+import ia.util.Request;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,33 +67,45 @@ public class JavaHTTPServer implements Runnable{
     }
 
 
+    public Request makeRequest (BufferedReader in) throws IOException {
+
+        Request request = new Request();
+
+        in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+        // we get character output stream to client (for headers)
+        String input = in.readLine();
+        // we parse the request with a string tokenizer
+        StringTokenizer parse = new StringTokenizer(input);
+        request.setMethod(parse.nextToken().toUpperCase());
+        request.setURL(parse.nextToken().toLowerCase());
+
+        return request;
+    }
+
 
     @Override
     public void run() {
-        // we manage our particular client connection
-        BufferedReader in = null; PrintWriter out = null; BufferedOutputStream dataOut = null;
-        String fileRequested = null;
+
+        BufferedReader in = null;
+        PrintWriter out = null;
+        BufferedOutputStream dataOut = null;
+
+        Request request = null;
 
         try {
-            // we read characters from the client via input stream on the socket
-            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-            // we get character output stream to client (for headers)
             out = new PrintWriter(connect.getOutputStream());
-            // get binary output stream to client (for requested data)
             dataOut = new BufferedOutputStream(connect.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            // get first line of the request from the client
-            String input = in.readLine();
-            // we parse the request with a string tokenizer
-            StringTokenizer parse = new StringTokenizer(input);
-            String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
-            // we get file requested
-            fileRequested = parse.nextToken().toLowerCase();
+        try {
 
-            // we support only GET and HEAD methods, we check
-            if (!method.equals("GET")  &&  !method.equals("HEAD")) {
+            request = makeRequest(in);
+
+            if (!request.isGetOrHead()) {
                 if (verbose) {
-                    System.out.println("501 Not Implemented : " + method + " method.");
+                    System.out.println("501 Not Implemented : " + request.getMethod() + " method.");
                 }
 
                 // we return the not supported file to the client
@@ -115,15 +129,15 @@ public class JavaHTTPServer implements Runnable{
 
             } else {
                 // GET or HEAD method
-                if (fileRequested.endsWith("/")) {
-                    fileRequested += DEFAULT_FILE;
+                if (request.getURL().endsWith("/")) {
+                    request.setURL(request.getURL()+ DEFAULT_FILE);
                 }
 
-                File file = new File(WEB_ROOT, fileRequested);
+                File file = new File(WEB_ROOT, request.getURL());
                 int fileLength = (int) file.length();
-                String content = getContentType(fileRequested);
+                String content = getContentType(request.getURL());
 
-                if (method.equals("GET")) { // GET method so we return content
+                if (request.isGet()) { // GET method so we return content
                     byte[] fileData = readFileData(file, fileLength);
 
                     // send HTTP Headers
@@ -140,14 +154,13 @@ public class JavaHTTPServer implements Runnable{
                 }
 
                 if (verbose) {
-                    System.out.println("File " + fileRequested + " of type " + content + " returned");
+                    System.out.println("File " + request.getURL() + " of type " + content + " returned");
                 }
-
             }
 
         } catch (FileNotFoundException fnfe) {
             try {
-                fileNotFound(out, dataOut, fileRequested);
+                fileNotFound(out, dataOut, request.getURL());
             } catch (IOException ioe) {
                 System.err.println("Error with file not found exception : " + ioe.getMessage());
             }

@@ -32,8 +32,9 @@ public class ReadFileData {
             return "text/plain";
     }
 
+
     void fileNotFound(PrintWriter out, OutputStream dataOut, String fileRequested) throws IOException {
-        File file = new File(resourceConfig.WEB_ROOT, ResourceConfig.FILE_NOT_FOUND);
+        File file = new File(ResourceConfig.WEB_ROOT, ResourceConfig.FILE_NOT_FOUND);
         int fileLength = (int) file.length();
         String content = "text/html";
         byte[] fileData = readFileData(file, fileLength);

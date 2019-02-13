@@ -58,7 +58,7 @@ public class ReadFileData {
         byte[] fileData = readFileData(file, fileLength);
 
         out.println("HTTP/1.1 404 File Not Found");
-        out.println("Server: Java HTTP Server");
+        out.println("Server: Java HTTP Server from SSaurel : 1.0");
         out.println("Date: " + new Date());
         out.println("Content-type: " + content);
         out.println("Content-length: " + fileLength);

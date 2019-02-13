@@ -57,7 +57,7 @@ public class ClientConnection implements Runnable {
 
                 // we send HTTP Headers with data to client
                 out.println("HTTP/1.1 501 Not Implemented");
-                out.println("Server: Java HTTP Server from SSaurel : 1.0");
+                out.println("Server: Java HTTP Server");
                 out.println("Date: " + new Date());
                 out.println("Content-type: " + contentMimeType);
                 out.println("Content-length: " + fileLength);
@@ -82,7 +82,7 @@ public class ClientConnection implements Runnable {
 
                     // send HTTP Headers
                     out.println("HTTP/1.1 200 OK");
-                    out.println("Server: Java HTTP Server from SSaurel : 1.0");
+                    out.println("Server: Java HTTP Server");
                     out.println("Date: " + new Date());
                     out.println("Content-type: " + content);
                     out.println("Content-length: " + fileLength);

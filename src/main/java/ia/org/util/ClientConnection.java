@@ -43,7 +43,7 @@ public class ClientConnection implements Runnable {
             fileRequested = parse.nextToken().toLowerCase();
 
             // we support only GET and HEAD methods, we check
-            if (!method.equals("GET") && !method.equals("HEAD")) {
+            if (!method.equals("GET") && !method.equals("HEAD") && !method.equals("POST")) {
                 if (verbose) {
                     System.out.println("501 Not Implemented : " + method + " method.");
                 }
@@ -67,7 +67,60 @@ public class ClientConnection implements Runnable {
                 dataOut.write(fileData, 0, fileLength);
                 dataOut.flush();
 
-            } else {
+            }
+
+            /**
+             * Metoden som checkar för POST. Läser nästa linje tills det är tom rad. sen kör den vidare och appendar varje byte (omgjort till char) som in läser tills det inte finns mer matrial kvar.
+             */
+            else if (method.equals("POST")) {
+
+
+                String headerLine = null;
+                while((headerLine = in.readLine()).length() != 0){
+                    System.out.println(headerLine);
+                }
+
+
+                StringBuilder payload = new StringBuilder();
+                while(in.ready()){
+                    payload.append((char) in.read());
+                }
+
+                System.out.println("Payload data is: "+payload.toString());
+
+                if (fileRequested.endsWith("/")) {
+                    fileRequested += ResourceConfig.DEFAULT_FILE;
+                }
+
+                File file = new File(ResourceConfig.WEB_ROOT, fileRequested);
+                int fileLength = (int) file.length();
+                String content = readFileData.getContentType(fileRequested);
+
+                if (method.equals("POST")) { //TODO: Detta är bara för att skicka tillbaka ett response till browsern. Kan behöva ändras för post. Just nu är det samma som GET.
+                    byte[] fileData = readFileData.readFileData(file, fileLength);
+
+                    // send HTTP Headers
+                    out.println("HTTP/1.1 200 OK");
+                    out.println("Server: Java HTTP Server");
+                    out.println("Date: " + new Date());
+                    out.println("Content-type: " + content);
+                    out.println("Content-length: " + fileLength);
+                    out.println(); // blank line between headers and content, very important !
+                    out.flush(); // flush character output stream buffer
+
+                    dataOut.write(fileData, 0, fileLength);
+                    dataOut.flush();
+                }
+
+                if (verbose) {
+                    System.out.println("File " + fileRequested + " of type " + content + " returned");
+                }
+
+
+            }
+
+
+             else {
                 // GET or HEAD method
                 if (fileRequested.endsWith("/")) {
                     fileRequested += ResourceConfig.DEFAULT_FILE;

@@ -6,6 +6,14 @@ import org.json.simple.JSONObject;
 public class JsonParser {
 
 
+    //Splits fileRequested url at ?, returns second half
+    public static String urlToJson(String inParam) {
+        String strArray[] = inParam.split("[?]", 2);
+
+        return strArray[1];
+    }
+
+    //Turns fileRequested url format to json format.
     public static String stringToJsonFormat(String inParam) {
         inParam = inParam.replaceAll("=", "\":\"");
         inParam = inParam.replaceAll("&", "\",\"");
@@ -25,10 +33,8 @@ public class JsonParser {
 
         for (JSONObject object: jsonObjects) {
             list.add(object);
-            System.out.println(object.toString());
         }
 
-        System.out.println(list.toString());
         return list;
     }
 

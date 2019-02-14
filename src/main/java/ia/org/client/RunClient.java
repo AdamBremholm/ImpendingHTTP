@@ -9,6 +9,8 @@ public class RunClient {
 
     public static void main(String[] args) {
 
+
+
         // issue the Get request
         Client client = new Client();
         String getResponse = null;
@@ -19,7 +21,6 @@ public class RunClient {
             e.printStackTrace();
         }
         System.out.println(getResponse);
-
 
         // issue the post request
 /*

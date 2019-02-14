@@ -46,6 +46,7 @@ public class ReadFileData {
 
         }
 
+
         else
             return "text/plain";
     }

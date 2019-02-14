@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html>
-<body background="background.jpg" style="background-repeat: no-repeat" style="background-size: auto">
+<body background="sunflower.png" style="background-repeat: no-repeat" style="background-size: auto">
 
 <h2>Enter your details.</h2>
 
 <form action="submit.php" method="post" onsubmit="submitFunction()">
     Full name:<br>
-    <input type="text" name="fullname">
+    <input type="text" id="fullName" name="fullName" value="fullName">
     <br><br>
     Adress:<br>
-    <input type="text" adress="adress">
+    <input type="text" name="address" id="address" value="address">
     <br><br>
     Birth date:<br>
-    <input type="text" dob="dateofbirth">
+    <input type="text" name="dateOfBirth" id="dateOfBirth" value="dateOfBirth">
     <br><br>
     Gender<br>
     <select name="gender">
-        <option value="Male"> Male</option>
-        <option value="Female">Female</option>
+        <option id="Male" value="Male"> Male</option>
+        <option id="Female" value="Female">Female</option>
     </select>
     <br><br>
     <input type="submit" value="submit">

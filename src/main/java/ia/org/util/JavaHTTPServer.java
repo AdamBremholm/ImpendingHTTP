@@ -13,7 +13,7 @@ public class JavaHTTPServer  {
     ClientConnection clientConnection;
     /*** Sätter resources root till rätt mapp.*/
     // port to listen connection
-    static final int PORT = 8080;
+    static final int PORT = 8083;
 
     // verbose mode
     static final boolean verbose = true;
@@ -30,7 +30,7 @@ public class JavaHTTPServer  {
                 ClientConnection client = new ClientConnection(serverConnect.accept());
 
                 if (verbose) {
-                    System.out.println("Connecton opened. (" + new Date() + ")");
+                    System.out.println("Connection opened. (" + new Date() + ")");
                 }
 
                 // create dedicated thread to manage the client connection

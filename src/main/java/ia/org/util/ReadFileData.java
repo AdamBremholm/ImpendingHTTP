@@ -45,6 +45,10 @@ public class ReadFileData {
             return "image/jpeg";
 
         }
+        else if (fileRequested.endsWith(".json")) {
+            return "application/json";
+
+        }
 
 
         else

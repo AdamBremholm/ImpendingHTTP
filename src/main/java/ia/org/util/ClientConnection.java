@@ -20,11 +20,12 @@ public class ClientConnection implements Runnable {
 
     @Override
     public void run() {
+        ClientRequest clientRequest = new ClientRequest();
+
         // we manage our particular client connection
         BufferedReader in = null;
         PrintWriter out = null;
         BufferedOutputStream dataOut = null;
-        String fileRequested = null;
 
         try {
             // we read characters from the client via input stream on the socket
@@ -38,20 +39,19 @@ public class ClientConnection implements Runnable {
             String input = in.readLine();
             // we parse the request with a string tokenizer
             StringTokenizer parse = new StringTokenizer(input);
-            String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
+            clientRequest.setMethod(parse.nextToken().toUpperCase()); // we get the HTTP method of the client
             // we get file requested
-            fileRequested = parse.nextToken().toLowerCase();
+            clientRequest.setFile(parse.nextToken().toLowerCase());
 
             // we support only GET and HEAD methods, we check
-            if (!method.equals("GET") && !method.equals("HEAD") && !method.equals("POST")) {
+            if (!clientRequest.isGetOrHeadOrPost()) {
                 if (verbose) {
-                    System.out.println("501 Not Implemented : " + method + " method.");
+                    System.out.println("501 Not Implemented : " + clientRequest.getMethod() + " method.");
                 }
-
                 // we return the not supported file to the client
                 File file = new File(ResourceConfig.WEB_ROOT, ResourceConfig.METHOD_NOT_SUPPORTED);
                 int fileLength = (int) file.length();
-                String contentMimeType = "text/html";
+                clientRequest.setContentType("text/html");
                 //read content to return to client
                 byte[] fileData = readFileData.readFileData(file, fileLength);
 
@@ -59,7 +59,7 @@ public class ClientConnection implements Runnable {
                 out.println("HTTP/1.1 501 Not Implemented");
                 out.println("Server: Java HTTP Server from SSaurel : 1.0");
                 out.println("Date: " + new Date());
-                out.println("Content-type: " + contentMimeType);
+                out.println("Content-type: " + clientRequest.getContentType());
                 out.println("Content-length: " + fileLength);
                 out.println(); // blank line between headers and content, very important !
                 out.flush(); // flush character output stream buffer
@@ -72,14 +72,12 @@ public class ClientConnection implements Runnable {
             /**
              * Metoden som checkar för POST. Läser nästa linje tills det är tom rad. sen kör den vidare och appendar varje byte (omgjort till char) som in läser tills det inte finns mer matrial kvar.
              */
-            else if (method.equals("POST")) {
-
+            else if (clientRequest.isPost()) {
 
                 String headerLine = null;
                 while((headerLine = in.readLine()).length() != 0){
                     System.out.println(headerLine);
                 }
-
 
                 StringBuilder payload = new StringBuilder();
                 while(in.ready()){
@@ -88,15 +86,15 @@ public class ClientConnection implements Runnable {
 
                 System.out.println("Payload data is: "+payload.toString());
 
-                if (fileRequested.endsWith("/")) {
-                    fileRequested += ResourceConfig.DEFAULT_FILE;
+                if (clientRequest.getFile().endsWith("/")) {
+                    clientRequest.setFile(clientRequest + ResourceConfig.DEFAULT_FILE);
                 }
 
-                File file = new File(ResourceConfig.WEB_ROOT, fileRequested);
+                File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 int fileLength = (int) file.length();
-                String content = readFileData.getContentType(fileRequested);
+                String content = readFileData.getContentType(clientRequest.getFile());
 
-                if (method.equals("POST")) { //TODO: Detta är bara för att skicka tillbaka ett response till browsern. Kan behöva ändras för post. Just nu är det samma som GET.
+                if (clientRequest.isPost()) { //TODO: Detta är bara för att skicka tillbaka ett response till browsern. Kan behöva ändras för post. Just nu är det samma som GET.
                     byte[] fileData = readFileData.readFileData(file, fileLength);
 
                     // send HTTP Headers
@@ -113,7 +111,7 @@ public class ClientConnection implements Runnable {
                 }
 
                 if (verbose) {
-                    System.out.println("File " + fileRequested + " of type " + content + " returned");
+                    System.out.println("File " + clientRequest.getFile() + " of type " + content + " returned");
                 }
 
 
@@ -122,15 +120,16 @@ public class ClientConnection implements Runnable {
 
              else {
                 // GET or HEAD method
-                if (fileRequested.endsWith("/")) {
-                    fileRequested += ResourceConfig.DEFAULT_FILE;
+                if (clientRequest.getFile().endsWith("/")) {
+                    clientRequest.setFile(clientRequest.getFile() + ResourceConfig.DEFAULT_FILE);
                 }
 
-                File file = new File(ResourceConfig.WEB_ROOT, fileRequested);
-                int fileLength = (int) file.length();
-                String content = readFileData.getContentType(fileRequested);
 
-                if (method.equals("GET")) { // GET method so we return content
+                File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
+                int fileLength = (int) file.length();
+                String content = readFileData.getContentType(clientRequest.getFile());
+
+                if (clientRequest.isGet()) { // GET method so we return content
                     byte[] fileData = readFileData.readFileData(file, fileLength);
 
                     // send HTTP Headers
@@ -147,14 +146,14 @@ public class ClientConnection implements Runnable {
                 }
 
                 if (verbose) {
-                    System.out.println("File " + fileRequested + " of type " + content + " returned");
+                    System.out.println("File " + clientRequest.getFile() + " of type " + content + " returned");
                 }
 
             }
 
         } catch (FileNotFoundException fnfe) {
             try {
-                readFileData.fileNotFound(out, dataOut, fileRequested);
+                readFileData.fileNotFound(out, dataOut, clientRequest.getFile());
             } catch (IOException ioe) {
                 System.err.println("Error with file not found exception : " + ioe.getMessage());
             }
@@ -178,7 +177,3 @@ public class ClientConnection implements Runnable {
 
     }
 }
-
-
-
-

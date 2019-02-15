@@ -24,16 +24,36 @@ public class ReadFileData {
         return fileData;
     }
 
-    // return supported MIME Types
-    String getContentType(String fileRequested) {
+    public String getContentType(String fileRequested) {
         if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
             return "text/html";
+        else if (fileRequested.endsWith(".css")) {
+            return "text/css";
+        }
+        else if (fileRequested.endsWith(".js")) {
+            return "text/javascript";
+        }
+        else if (fileRequested.endsWith(".pdf")) {
+            return "application/pdf";
+
+        }
+        else if (fileRequested.endsWith(".png")) {
+            return "image/png";
+
+        }
+        else if (fileRequested.endsWith(".jpg") || fileRequested.endsWith(".jpeg")) {
+            return "image/jpeg";
+
+        }
+
+
         else
             return "text/plain";
     }
 
+
     void fileNotFound(PrintWriter out, OutputStream dataOut, String fileRequested) throws IOException {
-        File file = new File(resourceConfig.WEB_ROOT, ResourceConfig.FILE_NOT_FOUND);
+        File file = new File(ResourceConfig.WEB_ROOT, ResourceConfig.FILE_NOT_FOUND);
         int fileLength = (int) file.length();
         String content = "text/html";
         byte[] fileData = readFileData(file, fileLength);

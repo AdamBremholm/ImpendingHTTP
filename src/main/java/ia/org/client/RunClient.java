@@ -1,10 +1,15 @@
 package ia.org.client;
 
+import ia.org.util.JsonParser;
+import org.json.simple.JSONObject;
+
 import java.io.IOException;
 
 public class RunClient {
 
     public static void main(String[] args) {
+
+
 
         // issue the Get request
         Client client = new Client();
@@ -17,7 +22,6 @@ public class RunClient {
         }
         System.out.println(getResponse);
 
-
         // issue the post request
 /*
         String json = client.bowlingJson("Jesse", "Jake");
@@ -26,9 +30,6 @@ public class RunClient {
 
         */
 
-
     }
-
-
 
 }

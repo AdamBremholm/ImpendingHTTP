@@ -1,13 +1,13 @@
-package ia.util;
+package ia.org.util;
 
 public class Request {
 
-    String method, url, accept;
+    String method, file, accept;
     String body = "";
 
-    public Request(String method, String url, String accept, String body) {
+    public Request(String method, String file, String accept, String body) {
         this.method = method;
-        this.url = url;
+        this.file = file;
         this.accept = accept;
         this.body = body;
     }
@@ -20,17 +20,15 @@ public class Request {
         this.method = method;
     }
 
-    public void setURL(String url) {
-        this.url = url;
+    public void setFile(String file) {
+        this.file = file;
     }
 
     public String getMethod() {
         return method;
     }
 
-    public String getURL() {
-        return url;
-    }
+    public String getFile() { return file;    }
 
     public Boolean isGet() {
         if (method.equals("GET")) {

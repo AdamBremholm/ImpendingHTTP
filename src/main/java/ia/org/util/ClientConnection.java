@@ -18,6 +18,42 @@ public class ClientConnection implements Runnable {
 
     ReadFileData readFileData = new ReadFileData();
 
+    private boolean staticFile;
+    private boolean pluginFile;
+
+
+    public static boolean isStaticFile(String fileRequested) {
+        if (fileRequested != null && fileRequested.contains(".")) {
+            return true;
+        }
+        else return false;
+
+    }
+
+    public static boolean endsWithSlash(String fileRequested) {
+        if (fileRequested != null && fileRequested.endsWith("/")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String removeEndingSlash(String fileRequested){
+        if (fileRequested != null && fileRequested.length() > 0 && fileRequested.charAt(fileRequested.length() - 1) == '/') {
+            fileRequested = fileRequested.substring(0, fileRequested.length() - 1);
+
+            return fileRequested;
+        }
+        else return fileRequested;
+
+    }
+
+    public void searchPlugin() {
+
+    }
+
+
+
     @Override
     public void run() {
         ClientRequest clientRequest = new ClientRequest();
@@ -42,118 +78,134 @@ public class ClientConnection implements Runnable {
             clientRequest.setMethod(parse.nextToken().toUpperCase()); // we get the HTTP method of the client
             // we get file requested
             clientRequest.setFile(parse.nextToken().toLowerCase());
-
-            // we support only GET and HEAD methods, we check
-            if (!clientRequest.isGetOrHeadOrPost()) {
-                if (verbose) {
-                    System.out.println("501 Not Implemented : " + clientRequest.getMethod() + " method.");
-                }
-                // we return the not supported file to the client
-                File file = new File(ResourceConfig.WEB_ROOT, ResourceConfig.METHOD_NOT_SUPPORTED);
-                int fileLength = (int) file.length();
-                clientRequest.setContentType("text/html");
-                //read content to return to client
-                byte[] fileData = readFileData.readFileData(file, fileLength);
-
-                // we send HTTP Headers with data to client
-                out.println("HTTP/1.1 501 Not Implemented");
-                out.println("Server: Java HTTP Server from SSaurel : 1.0");
-                out.println("Date: " + new Date());
-                out.println("Content-type: " + clientRequest.getContentType());
-                out.println("Content-length: " + fileLength);
-                out.println(); // blank line between headers and content, very important !
-                out.flush(); // flush character output stream buffer
-                // file
-                dataOut.write(fileData, 0, fileLength);
-                dataOut.flush();
-
-            }
-
-            /**
-             * Metoden som checkar för POST. Läser nästa linje tills det är tom rad. sen kör den vidare och appendar varje byte (omgjort till char) som in läser tills det inte finns mer matrial kvar.
-             */
-            else if (clientRequest.isPost()) {
-
-                String headerLine = null;
-                while((headerLine = in.readLine()).length() != 0){
-                    System.out.println(headerLine);
-                }
-
-                StringBuilder payload = new StringBuilder();
-                while(in.ready()){
-                    payload.append((char) in.read());
-                }
-
-                System.out.println("Payload data is: "+payload.toString());
-
-                if (clientRequest.getFile().endsWith("/")) {
-                    clientRequest.setFile(clientRequest + ResourceConfig.DEFAULT_FILE);
-                }
-
-                File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
-                int fileLength = (int) file.length();
-                String content = readFileData.getContentType(clientRequest.getFile());
-
-                if (clientRequest.isPost()) { //TODO: Detta är bara för att skicka tillbaka ett response till browsern. Kan behöva ändras för post. Just nu är det samma som GET.
-                    byte[] fileData = readFileData.readFileData(file, fileLength);
-
-                    // send HTTP Headers
-                    out.println("HTTP/1.1 200 OK");
-                    out.println("Server: Java HTTP Server");
-                    out.println("Date: " + new Date());
-                    out.println("Content-type: " + content);
-                    out.println("Content-length: " + fileLength);
-                    out.println(); // blank line between headers and content, very important !
-                    out.flush(); // flush character output stream buffer
-
-                    dataOut.write(fileData, 0, fileLength);
-                    dataOut.flush();
-                }
-
-                if (verbose) {
-                    System.out.println("File " + clientRequest.getFile() + " of type " + content + " returned");
-                }
+            //Check if file is static or dynamic
+            staticFile = isStaticFile(clientRequest.getFile());
+            //If its not static, check of the file is a plugin or not. If its not a plugin
+            //if (!staticFile) {
+            //   pluginFile = isPlugin(clientRequest.getFile());
+            //}
 
 
-            }
+            /**Känner av om statisk och isåfall kör statisk metod, annars kör den dynamisk metod*/
+            if (staticFile) {
 
-
-             else {
-                // GET or HEAD method
-                if (clientRequest.getFile().endsWith("/")) {
-                    clientRequest.setFile(clientRequest.getFile() + ResourceConfig.DEFAULT_FILE);
-                }
-
-                File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
-                int fileLength = (int) file.length();
-                clientRequest.setContentType(readFileData.getContentType(clientRequest.getFile()));
-
-                if (clientRequest.isGet()) { // GET method so we return content
-
-                    if (clientRequest.getFile().startsWith("/json")) {
-                        JsonParser.makeHtmlJsonConvertion(clientRequest.getFile());
+                // we support only GET and HEAD methods, we check
+                if (!clientRequest.isGetOrHeadOrPost()) {
+                    if (verbose) {
+                        System.out.println("501 Not Implemented : " + clientRequest.getMethod() + " method.");
                     }
-
+                    // we return the not supported file to the client
+                    File file = new File(ResourceConfig.WEB_ROOT, ResourceConfig.METHOD_NOT_SUPPORTED);
+                    int fileLength = (int) file.length();
+                    clientRequest.setContentType("text/html");
+                    //read content to return to client
                     byte[] fileData = readFileData.readFileData(file, fileLength);
 
-                    // send HTTP Headers
-                    out.println("HTTP/1.1 200 OK");
+                    // we send HTTP Headers with data to client
+                    out.println("HTTP/1.1 501 Not Implemented");
                     out.println("Server: Java HTTP Server from SSaurel : 1.0");
                     out.println("Date: " + new Date());
                     out.println("Content-type: " + clientRequest.getContentType());
                     out.println("Content-length: " + fileLength);
                     out.println(); // blank line between headers and content, very important !
                     out.flush(); // flush character output stream buffer
-
+                    // file
                     dataOut.write(fileData, 0, fileLength);
                     dataOut.flush();
+
                 }
 
-                if (verbose) {
-                    System.out.println("File " + clientRequest.getFile() + " of type " + clientRequest.getContentType() + " returned");
+                /**
+                 * Metoden som checkar för POST. Läser nästa linje tills det är tom rad. sen kör den vidare och appendar varje byte (omgjort till char) som in läser tills det inte finns mer matrial kvar.
+                 */
+                else if (clientRequest.isPost()) {
+
+                    String headerLine = null;
+                    while((headerLine = in.readLine()).length() != 0){
+                        System.out.println(headerLine);
+                    }
+
+                    StringBuilder payload = new StringBuilder();
+                    while(in.ready()){
+                        payload.append((char) in.read());
+                    }
+
+                    System.out.println("Payload data is: "+payload.toString());
+
+                    if (clientRequest.getFile().endsWith("/")) {
+                        clientRequest.setFile(clientRequest + ResourceConfig.DEFAULT_FILE);
+                    }
+
+                    File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
+                    int fileLength = (int) file.length();
+                    String content = readFileData.getContentType(clientRequest.getFile());
+
+                    if (clientRequest.isPost()) { //TODO: Detta är bara för att skicka tillbaka ett response till browsern. Kan behöva ändras för post. Just nu är det samma som GET.
+                        byte[] fileData = readFileData.readFileData(file, fileLength);
+
+                        // send HTTP Headers
+                        out.println("HTTP/1.1 200 OK");
+                        out.println("Server: Java HTTP Server");
+                        out.println("Date: " + new Date());
+                        out.println("Content-type: " + content);
+                        out.println("Content-length: " + fileLength);
+                        out.println(); // blank line between headers and content, very important !
+                        out.flush(); // flush character output stream buffer
+
+                        dataOut.write(fileData, 0, fileLength);
+                        dataOut.flush();
+                    }
+
+                    if (verbose) {
+                        System.out.println("File " + clientRequest.getFile() + " of type " + content + " returned");
+                    }
+
+
                 }
+
+
+                else {
+                    // GET or HEAD method
+                    if (clientRequest.getFile().endsWith("/")) {
+                        clientRequest.setFile(clientRequest.getFile() + ResourceConfig.DEFAULT_FILE);
+                    }
+
+
+                    File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
+                    int fileLength = (int) file.length();
+                    clientRequest.setContentType(readFileData.getContentType(clientRequest.getFile()));
+
+                    if (clientRequest.isGet()) { // GET method so we return content
+                        byte[] fileData = readFileData.readFileData(file, fileLength);
+
+                        // send HTTP Headers
+                        out.println("HTTP/1.1 200 OK");
+                        out.println("Server: Java HTTP Server from SSaurel : 1.0");
+                        out.println("Date: " + new Date());
+                        out.println("Content-type: " + clientRequest.getContentType());
+                        out.println("Content-length: " + fileLength);
+                        out.println(); // blank line between headers and content, very important !
+                        out.flush(); // flush character output stream buffer
+
+                        dataOut.write(fileData, 0, fileLength);
+                        dataOut.flush();
+                    }
+
+                    if (verbose) {
+                        System.out.println("File " + clientRequest.getFile() + " of type " + clientRequest.getContentType() + " returned");
+                    }
+
+                }
+            }
+
+
+            /** Kör dynamisk kod*/
+            else {
+
+                System.out.println(JsonParser.urlToJson(clientRequest.getFile()));
 
             }
+
 
         } catch (FileNotFoundException fnfe) {
             try {
@@ -179,5 +231,8 @@ public class ClientConnection implements Runnable {
             }
         }
 
+
+            }
+
+
     }
-}

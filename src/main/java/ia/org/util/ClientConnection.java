@@ -124,12 +124,16 @@ public class ClientConnection implements Runnable {
                     clientRequest.setFile(clientRequest.getFile() + ResourceConfig.DEFAULT_FILE);
                 }
 
-
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 int fileLength = (int) file.length();
                 clientRequest.setContentType(readFileData.getContentType(clientRequest.getFile()));
 
                 if (clientRequest.isGet()) { // GET method so we return content
+
+                    if (clientRequest.getFile().startsWith("/json")) {
+                        JsonParser.makeHtmlJsonConvertion(clientRequest.getFile());
+                    }
+
                     byte[] fileData = readFileData.readFileData(file, fileLength);
 
                     // send HTTP Headers

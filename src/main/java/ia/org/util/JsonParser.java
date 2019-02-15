@@ -3,18 +3,18 @@ package ia.org.util;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-
 public class JsonParser {
 
 
     //Splits fileRequested url at ?, returns second half
-    public static String urlToJson(String inParam) {
+    public static String urlToString(String inParam) {
         String strArray[] = inParam.split("[?]", 2);
 
         return strArray[1];
+    }
+
+    public static String urlToJson(String inParam) {
+        return stringToJsonFormat(urlToString(inParam));
     }
 
     //Turns fileRequested url format to json format.
@@ -42,7 +42,7 @@ public class JsonParser {
         return list;
     }
 
-    void makeHtmlJsonConvertion(String url){
+    public static String makeHtmlJsonConvertion(String url){
 
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
@@ -50,27 +50,10 @@ public class JsonParser {
         sb.append("<title>Title Of the page");
         sb.append("</title>");
         sb.append("</head>");
-        sb.append("<body> <b>" + stringToJsonFormat(urlToJson(url)) + "</b>");
+        sb.append("<body> <b>" + stringToJsonFormat(urlToString(url)) + "</b>");
         sb.append("</body>");
         sb.append("</html>");
-        FileWriter fstream = null;
-        try {
-            fstream = new FileWriter("MyHtml.html");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        BufferedWriter out = new BufferedWriter(fstream);
-        try {
-            out.write(sb.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        return sb.toString();
     }
 
 }

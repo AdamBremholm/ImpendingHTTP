@@ -3,6 +3,10 @@ package ia.org.util;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class JsonParser {
 
 
@@ -36,6 +40,37 @@ public class JsonParser {
         }
 
         return list;
+    }
+
+    void makeHtmlJsonConvertion(String url){
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        sb.append("<head>");
+        sb.append("<title>Title Of the page");
+        sb.append("</title>");
+        sb.append("</head>");
+        sb.append("<body> <b>" + stringToJsonFormat(urlToJson(url)) + "</b>");
+        sb.append("</body>");
+        sb.append("</html>");
+        FileWriter fstream = null;
+        try {
+            fstream = new FileWriter("MyHtml.html");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BufferedWriter out = new BufferedWriter(fstream);
+        try {
+            out.write(sb.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

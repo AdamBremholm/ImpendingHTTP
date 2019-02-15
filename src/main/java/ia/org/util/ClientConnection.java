@@ -127,7 +127,7 @@ public class ClientConnection implements Runnable {
 
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 int fileLength = (int) file.length();
-                String content = readFileData.getContentType(clientRequest.getFile());
+                clientRequest.setContentType(readFileData.getContentType(clientRequest.getFile()));
 
                 if (clientRequest.isGet()) { // GET method so we return content
                     byte[] fileData = readFileData.readFileData(file, fileLength);
@@ -136,7 +136,7 @@ public class ClientConnection implements Runnable {
                     out.println("HTTP/1.1 200 OK");
                     out.println("Server: Java HTTP Server from SSaurel : 1.0");
                     out.println("Date: " + new Date());
-                    out.println("Content-type: " + content);
+                    out.println("Content-type: " + clientRequest.getContentType());
                     out.println("Content-length: " + fileLength);
                     out.println(); // blank line between headers and content, very important !
                     out.flush(); // flush character output stream buffer
@@ -146,7 +146,7 @@ public class ClientConnection implements Runnable {
                 }
 
                 if (verbose) {
-                    System.out.println("File " + clientRequest.getFile() + " of type " + content + " returned");
+                    System.out.println("File " + clientRequest.getFile() + " of type " + clientRequest.getContentType() + " returned");
                 }
 
             }

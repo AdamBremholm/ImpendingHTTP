@@ -11,17 +11,11 @@ public class JsonParser {
 
     //Splits fileRequested url at ?, returns second half
     public static String urlToString(String inParam) {
-        String firstHalf = "";
-        String secondHalf = "";
-        if (inParam.contains("?")) {
-            String strArray[] = inParam.split("[?]", 2);
-            firstHalf = strArray[0];
-            secondHalf = strArray[1];
-        }
+        String strArray[] = inParam.split("[?]", 2);
 
-        if (secondHalf.length() > 1) {
-            return secondHalf;
-        } else return firstHalf;
+        if (strArray.length > 0) {
+            return strArray[1];
+        } else return strArray[0];
 
     }
 

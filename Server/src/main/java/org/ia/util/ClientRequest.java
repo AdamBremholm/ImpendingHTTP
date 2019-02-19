@@ -1,3 +1,4 @@
+
 package org.ia.util;
 
 
@@ -7,18 +8,14 @@ import java.util.StringTokenizer;
 
 public class ClientRequest {
 
-    String firstLine;
     String method;
     String file = null;
-    String accept;
     String body = null;
     Socket connect;
     StringBuilder payload;
     String contentType;
 
     BufferedReader in = null;
-    PrintWriter out = null;
-    BufferedOutputStream dataOut = null;
 
     public void initReaders() throws IOException {
         in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
@@ -39,16 +36,6 @@ public class ClientRequest {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
-
-
-    public ClientRequest(String method, String file, String accept, String body) {
-        this.method = method;
-        this.file = file;
-        this.accept = accept;
-        this.body = body;
-    }
-
-
 
     public ClientRequest(Socket connect) {
         this.connect = connect;
@@ -92,7 +79,7 @@ public class ClientRequest {
         } else return false;
     }
 
-    public void readPost() throws IOException {
+    public String readPost() throws IOException {
         while ((body = in.readLine()).length() != 0){
             System.out.println(body);
         }
@@ -102,6 +89,7 @@ public class ClientRequest {
             payload.append((char) in.read());
         }
         System.out.println("Payload data is: "+getPayloadString());
+        return payload.toString();
     }
 
     public String getPayloadString() {

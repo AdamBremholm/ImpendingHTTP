@@ -1,5 +1,7 @@
 package org.ia.util;
 
+import org.json.simple.JSONObject;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
@@ -64,15 +66,31 @@ public class ServerResponse {
 
 
     public void sendPostJson() throws IOException {
+
         out.println("HTTP/1.1 200 OK");
         out.println(serverName);
         out.println("Date: " + new Date());
-        out.println("Content-type: " + "json/application");
+        out.println("Content-type: " + "text/html");
         out.println("Content-length: " + jsonBytes.length);
         out.println(); // blank line between headers and content, very important !
         out.flush(); // flush character output stream buffer
 
         dataOut.write(jsonBytes);
+        dataOut.flush();
+    }
+
+    public void sendPost(ClientRequest clientRequest, ReadFileData readFileData, File file) throws IOException {
+        byte[] fileData = readFileData.readFileData(file, (int)file.length());
+
+        out.println("HTTP/1.1 200 OK");
+        out.println(serverName);
+        out.println("Date: " + new Date());
+        out.println("Content-type: " + clientRequest.getContentType());
+        out.println("Content-length: " + fileData.length);
+        out.println(); // blank line between headers and content, very important !
+        out.flush(); // flush character output stream buffer
+
+        dataOut.write(fileData);
         dataOut.flush();
     }
 
@@ -86,6 +104,10 @@ public class ServerResponse {
     public void setJson(String fileRequest) {
         String jsonString = JsonParser.urlToJson(fileRequest);
         jsonBytes = jsonString.getBytes();
+    }
+
+    public void setJson(JSONObject obj) {
+        jsonBytes = obj.toString().getBytes();
     }
 
     public void close() throws IOException {

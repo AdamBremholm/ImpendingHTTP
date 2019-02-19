@@ -1,7 +1,5 @@
 package org.ia.util;
 
-import org.bson.json.JsonReader;
-
 import java.io.*;
 import java.net.Socket;
 
@@ -43,7 +41,7 @@ public class ClientConnection implements Runnable {
                 String clientBody = clientRequest.readPost();
                     if (!clientRequest.isGetOrHead()){
                         //Puts Json in byte[] and sends to client
-                        serverResponse.setJson(JsonParser.stringToJsonFormat(clientBody));
+                        serverResponse.setJson(JsonParser.formatSlicedUrl(clientBody));
                         serverResponse.sendPostJson();
                     } else {
                         serverResponse.sendNotImplemented(clientRequest);

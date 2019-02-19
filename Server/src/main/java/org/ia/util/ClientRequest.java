@@ -4,6 +4,8 @@ package org.ia.util;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class ClientRequest {
@@ -14,19 +16,61 @@ public class ClientRequest {
     Socket connect;
     StringBuilder payload;
     String contentType;
+    List<RequestData> requestObjectsList;
+
 
     BufferedReader in = null;
+    private String protocol;
 
+    /**
+     * Metod som används för att läsa GET och HEAD förfrågningar.
+     */
     public void initReaders() throws IOException {
         in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
 
-        // get first line of the request from the client
-        String input = in.readLine();
-        // we parse the request with a string tokenizer
-        StringTokenizer parse = new StringTokenizer(input);
-        method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
+        StringBuilder builder = new StringBuilder();
+        String line;
+        requestObjectsList = new ArrayList<>();
+
+        do
+        {
+            line = in.readLine();
+            if (line.equals("")) break;
+            //Bygger upp en lång sträng som den sparar. Används för att kunna läsa ut metoden och filen, se nedan.
+            builder.append(line);
+            builder.append(System.lineSeparator());
+
+            //Delar upp en rad i två delar mellan med kolontecken som separator. Det som är till vänster blir
+            // type det andra blir value. Sparas sedan in som RequestData Objekt i arraylisten requestObjectsList.
+            StringTokenizer tokenizer = new StringTokenizer(line, ":");
+            if (line.contains(":")) {
+                String type = tokenizer.nextToken();
+                String value = tokenizer.nextToken();
+                requestObjectsList.add(new RequestData(type, value));
+
+            }
+
+        }
+        while (true);
+
+        StringTokenizer builderParse = new StringTokenizer(builder.toString());
+        method = builderParse.nextToken().toUpperCase(); // we get the HTTP method of the client
         // we get file requested
-        file = parse.nextToken().toLowerCase();
+        file = builderParse.nextToken().toLowerCase();
+        protocol = builderParse.nextToken().toUpperCase();
+        //Adds method, file and protocol to our requestObjectList
+        requestObjectsList.add(0, new RequestData("method", method));
+        requestObjectsList.add(1, new RequestData("file", file));
+        requestObjectsList.add(2, new RequestData("protocol", protocol));
+
+
+        System.out.println("Prints data from requestObject ArrayList:\n");
+        for (RequestData r : requestObjectsList) {
+            System.out.println(r.toString());
+        }
+
+
+
     }
 
     public String getContentType() {

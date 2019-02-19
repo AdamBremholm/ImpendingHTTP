@@ -96,13 +96,13 @@ public class ServerResponse {
 
     //From clientRequest's stringBuilder, from POST body.
     public void setJson(ClientRequest clientRequest) {
-        String jsonString = JsonParser.urlToJson(clientRequest.getPayloadString());
+        String jsonString = JsonParser.urlToFormattedString(clientRequest.getPayloadString());
         jsonBytes = jsonString.getBytes();
     }
 
     //From clientRequest's fileRequest, from GET requests
     public void setJson(String fileRequest) {
-        String jsonString = JsonParser.urlToJson(fileRequest);
+        String jsonString = JsonParser.urlToFormattedString(fileRequest);
         jsonBytes = jsonString.getBytes();
     }
 

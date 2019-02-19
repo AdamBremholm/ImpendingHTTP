@@ -22,9 +22,7 @@ public class ClientRequest {
     BufferedReader in = null;
     private String protocol;
 
-    /**
-     * Metod som används för att läsa GET och HEAD förfrågningar.
-     */
+
     public void initReaders() throws IOException {
         in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
 
@@ -53,24 +51,41 @@ public class ClientRequest {
         }
         while (true);
 
+
         StringTokenizer builderParse = new StringTokenizer(builder.toString());
         method = builderParse.nextToken().toUpperCase(); // we get the HTTP method of the client
         // we get file requested
         file = builderParse.nextToken().toLowerCase();
         protocol = builderParse.nextToken().toUpperCase();
         //Adds method, file and protocol to our requestObjectList
-        requestObjectsList.add(0, new RequestData("method", method));
-        requestObjectsList.add(1, new RequestData("file", file));
-        requestObjectsList.add(2, new RequestData("protocol", protocol));
+        requestObjectsList.add(0, new RequestData("Method", method));
+        requestObjectsList.add(1, new RequestData("File", file));
+        requestObjectsList.add(2, new RequestData("Protocol", protocol));
 
 
-        System.out.println("Prints data from requestObject ArrayList:\n");
+        //kollar om det är post och kör nedre delen av readPostmetoden
+        if (method.equals("POST")) {
+            payload = new StringBuilder();
+            while(in.ready()){
+                payload.append((char) in.read());
+            }
+            System.out.println("Payload data is: "+getPayloadString());
+
+            if (getPayloadString()!=null && getPayloadString().length()>0) {
+                requestObjectsList.add(new RequestData("Body", getPayloadString()));
+            }
+        }
+
+    }
+
+    public void printRequestObjectList() {
         for (RequestData r : requestObjectsList) {
             System.out.println(r.toString());
         }
+    }
 
-
-
+    public String findFirstValueByType(String type) {
+      return requestObjectsList.stream().filter(requestData -> requestData.equals("type")).findFirst().get().getValue();
     }
 
     public String getContentType() {

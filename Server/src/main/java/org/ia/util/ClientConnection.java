@@ -1,8 +1,9 @@
 package org.ia.util;
 
+import org.bson.json.JsonReader;
+
 import java.io.*;
 import java.net.Socket;
-import java.util.Date;
 
 public class ClientConnection implements Runnable {
 
@@ -33,22 +34,20 @@ public class ClientConnection implements Runnable {
                     System.out.println("501 Not Implemented : " + clientRequest.getMethod() + " method.");
                 }
                 serverResponse.sendNotImplemented(clientRequest);
-            } else if (clientRequest.isPost()) {
-                clientRequest.readPost();
 
+            } else if (clientRequest.isPost()) {
                 if (clientRequest.getFile().endsWith("/")) {
                     clientRequest.setFile(clientRequest + ResourceConfig.DEFAULT_FILE);
                 }
 
-                //Puts Json in byte[]
-                serverResponse.setJson(clientRequest);
-
-                if (clientRequest.isPost()) { //TODO: Detta är bara för att skicka tillbaka ett response till browsern. Kan behöva ändras för post. Just nu är det samma som GET.
-                    serverResponse.sendPostJson();
-                }
-                if (verbose) {
-                    System.out.println("File " + clientRequest.getFile() + " of type " + "json/application" + " returned");
-                }
+                String clientBody = clientRequest.readPost();
+                    if (!clientRequest.isGetOrHead()){
+                        //Puts Json in byte[] and sends to client
+                        serverResponse.setJson(JsonParser.stringToJsonFormat(clientBody));
+                        serverResponse.sendPostJson();
+                    } else {
+                        serverResponse.sendNotImplemented(clientRequest);
+                    }
             } else {
                 // GET or HEAD method
                 if (clientRequest.getFile().endsWith("/")) {

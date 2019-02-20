@@ -92,7 +92,7 @@ public class ServerResponse {
         out.println("HTTP/1.1 200 OK");
         out.println(serverName);
         out.println("Date: " + new Date());
-        out.println("Content-type: " + "text/html");
+        out.println("Content-type: " + "application/json");
         out.println("Content-length: " + jsonBytes.length);
         out.println(); // blank line between headers and content, very important !
         out.flush(); // flush character output stream buffer
@@ -114,6 +114,35 @@ public class ServerResponse {
 
         dataOut.write(fileData);
         dataOut.flush();
+    }
+
+    public void sendHead(ClientRequest clientRequest, File file, ReadFileData readFileData) throws IOException {
+
+        int fileLength = (int) file.length();
+        byte[] fileData = readFileData.readFileData(file, fileLength);
+
+        // send HTTP Headers
+        out.println("HTTP/1.1 200 OK");
+        out.println(serverName);
+        out.println("Date: " + new Date());
+        out.println("Content-type: " + getContentType());
+        out.println("Content-length: " + fileLength);
+        out.println(); // blank line between headers and content, very important !
+        out.flush(); // flush character output stream buffer
+
+    }
+
+    public void sendHeadJson() throws IOException {
+
+        out.println("HTTP/1.1 200 OK");
+        out.println(serverName);
+        out.println("Date: " + new Date());
+        out.println("Content-type: " + "application/json");
+        out.println("Content-length: " + jsonBytes.length);
+        out.println(); // blank line between headers and content, very important !
+        out.flush(); // flush character output stream buffer
+
+
     }
 
     //From clientRequest's stringBuilder, from POST body.

@@ -49,7 +49,10 @@ public class ClientConnection implements Runnable {
 
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
+                if (clientRequest.isGet())
                 serverResponse.sendGet(clientRequest, file, readFileData);
+                else if (clientRequest.isHead()) //Skicka bara Headers tillbaka
+                    serverResponse.sendHead(clientRequest, file, readFileData);
             }
             //Dynamisk
             else if (isDynamic(clientRequest)){
@@ -62,6 +65,12 @@ public class ClientConnection implements Runnable {
                             && clientRequest.getFile().length() > 5) {
                         serverResponse.setJson(clientRequest.getFile());
                         serverResponse.sendPostJson();
+                    } else if (clientRequest.isHead()
+                            && clientRequest.getFile().startsWith("/json")
+                            && clientRequest.getFile().length() > 5) {
+                        serverResponse.setJson(clientRequest.getFile());
+                        serverResponse.sendHeadJson();
+                        //Skicka bara Headers tillbaka
                     }
 
                 } else if(clientRequest.isPost()) {

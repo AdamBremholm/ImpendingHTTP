@@ -13,6 +13,7 @@ public class ClientConnection implements Runnable {
         connect = c;
     }
     ReadFileData readFileData = new ReadFileData();
+    DBConnection dbConnection = new DBConnection();
 
     @Override
     public void run() {
@@ -26,6 +27,16 @@ public class ClientConnection implements Runnable {
             //In, out and dataOut
             clientRequest.initReaders();
             serverResponse.initWriters();
+
+//TODO: MongoDB som modul. Nedan är testning. Starta Mongoshell, så lyssnar mongo på default port (27017).
+//
+//            dbConnection.connectToDB();
+//            dbConnection.statsAddConnection(clientRequest);
+//
+//            dbConnection.statsPrintConnections();
+//            dbConnection.statsCountConnections();
+
+
 
             if (!clientRequest.isGetOrHeadOrPost()) {
                 if (verbose) {

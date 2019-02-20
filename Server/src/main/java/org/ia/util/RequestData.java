@@ -25,7 +25,7 @@ public class RequestData {
 
     @Override
     public String toString() {
-        return type + ":" + value;
+        return type + ": " + value;
     }
 
     public String getType() {

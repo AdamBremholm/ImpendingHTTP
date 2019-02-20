@@ -13,6 +13,23 @@ public class ClientRequest {
     String method;
     String file = null;
     String body = null;
+
+    public Socket getConnect() {
+        return connect;
+    }
+
+    public void setConnect(Socket connect) {
+        this.connect = connect;
+    }
+
+    public BufferedReader getIn() {
+        return in;
+    }
+
+    public void setIn(BufferedReader in) {
+        this.in = in;
+    }
+
     Socket connect;
     StringBuilder payload;
     String contentType;

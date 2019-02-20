@@ -4,7 +4,9 @@ import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ServerResponse {
 
@@ -12,13 +14,23 @@ public class ServerResponse {
     Socket connect;
     byte[] jsonBytes;
     ReadFileData readFileData;
-
     PrintWriter out = null;
     BufferedOutputStream dataOut = null;
+    String firstLine;
+    String contentType;
+    String contentLength;
 
     public ServerResponse(Socket connect, ReadFileData readFileData) {
         this.connect = connect;
         this.readFileData = readFileData;
+    }
+
+
+    public void sendCustom(ClientRequest clientRequest, File file, ReadFileData readFileData, List<RequestData> responseDataList){
+
+
+
+
     }
 
     public void sendGet(ClientRequest clientRequest, File file, ReadFileData readFileData) throws IOException {

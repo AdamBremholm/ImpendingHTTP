@@ -1,2 +1,2 @@
-org.ia.plugin.EnglishGreeting
-org.ia.plugin.SwedishGreeting
+org.ia.plugin.DynamicWebPage
+org.ia.plugin.JsonWriter

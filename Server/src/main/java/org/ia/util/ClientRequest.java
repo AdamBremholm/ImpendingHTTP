@@ -66,6 +66,7 @@ public class ClientRequest {
         printRequestObjectList();
 
 
+
         //kollar om det är post och om det finns en body med och kör nedre delen av readPostmetoden
         if (isPost() && bodyExists()) {
             payload = new StringBuilder();

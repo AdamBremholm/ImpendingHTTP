@@ -40,8 +40,7 @@ public class ClientRequest {
 
             //Delar upp en rad i två delar mellan med kolontecken som separator. Det som är till vänster blir
             // type det andra blir value. Sparas sedan in som RequestData Objekt i arraylisten requestDataList.
-            // Innehåller fortfarande blankspaces så när det görs om till siffror behöver man köra trim() på vägen ut.
-            StringTokenizer tokenizer = new StringTokenizer(line, ":");
+            StringTokenizer tokenizer = new StringTokenizer(line, ": ");
             if (line.contains(":")) {
                 String type = tokenizer.nextToken();
                 String value = tokenizer.nextToken();
@@ -62,6 +61,9 @@ public class ClientRequest {
         requestDataList.add(0, new RequestData("Method", method));
         requestDataList.add(1, new RequestData("File", file));
         requestDataList.add(2, new RequestData("Protocol", protocol));
+
+
+        printRequestObjectList();
 
 
         //kollar om det är post och om det finns en body med och kör nedre delen av readPostmetoden

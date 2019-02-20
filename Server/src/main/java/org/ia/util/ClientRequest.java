@@ -16,7 +16,7 @@ public class ClientRequest {
     Socket connect;
     StringBuilder payload;
     String contentType;
-    List<RequestData> requestObjectsList;
+    List<RequestData> requestDataList;
 
 
     BufferedReader in = null;
@@ -28,7 +28,7 @@ public class ClientRequest {
 
         StringBuilder builder = new StringBuilder();
         String line;
-        requestObjectsList = new ArrayList<>();
+        requestDataList = new ArrayList<>();
 
         do
         {
@@ -39,12 +39,13 @@ public class ClientRequest {
             builder.append(System.lineSeparator());
 
             //Delar upp en rad i två delar mellan med kolontecken som separator. Det som är till vänster blir
-            // type det andra blir value. Sparas sedan in som RequestData Objekt i arraylisten requestObjectsList.
+            // type det andra blir value. Sparas sedan in som RequestData Objekt i arraylisten requestDataList.
+            // Innehåller fortfarande blankspaces så när det görs om till siffror behöver man köra trim() på vägen ut.
             StringTokenizer tokenizer = new StringTokenizer(line, ":");
             if (line.contains(":")) {
                 String type = tokenizer.nextToken();
                 String value = tokenizer.nextToken();
-                requestObjectsList.add(new RequestData(type, value));
+                requestDataList.add(new RequestData(type, value));
 
             }
 
@@ -58,34 +59,38 @@ public class ClientRequest {
         file = builderParse.nextToken().toLowerCase();
         protocol = builderParse.nextToken().toUpperCase();
         //Adds method, file and protocol to our requestObjectList
-        requestObjectsList.add(0, new RequestData("Method", method));
-        requestObjectsList.add(1, new RequestData("File", file));
-        requestObjectsList.add(2, new RequestData("Protocol", protocol));
+        requestDataList.add(0, new RequestData("Method", method));
+        requestDataList.add(1, new RequestData("File", file));
+        requestDataList.add(2, new RequestData("Protocol", protocol));
 
 
-        //kollar om det är post och kör nedre delen av readPostmetoden
-        if (method.equals("POST")) {
+        //kollar om det är post och om det finns en body med och kör nedre delen av readPostmetoden
+        if (isPost() && bodyExists()) {
             payload = new StringBuilder();
             while(in.ready()){
                 payload.append((char) in.read());
             }
-            System.out.println("Payload data is: "+getPayloadString());
 
             if (getPayloadString()!=null && getPayloadString().length()>0) {
-                requestObjectsList.add(new RequestData("Body", getPayloadString()));
+                requestDataList.add(new RequestData("Body", getPayloadString()));
             }
         }
 
     }
 
+    public boolean bodyExists() {
+        return Integer.parseInt(findFirstValueByType("Content-Length").trim()) > 0;
+    }
+
     public void printRequestObjectList() {
-        for (RequestData r : requestObjectsList) {
+        for (RequestData r : requestDataList) {
             System.out.println(r.toString());
         }
     }
 
     public String findFirstValueByType(String type) {
-      return requestObjectsList.stream().filter(requestData -> requestData.equals("type")).findFirst().get().getValue();
+        //TODO: kolla för null
+      return requestDataList.stream().filter(requestData -> requestData.getType().equals(type)).findFirst().get().getValue();
     }
 
     public String getContentType() {
@@ -138,18 +143,6 @@ public class ClientRequest {
         } else return false;
     }
 
-    public String readPost() throws IOException {
-        while ((body = in.readLine()).length() != 0){
-            System.out.println(body);
-        }
-
-        payload = new StringBuilder();
-        while(in.ready()){
-            payload.append((char) in.read());
-        }
-        System.out.println("Payload data is: "+getPayloadString());
-        return payload.toString();
-    }
 
     public String getPayloadString() {
         return payload.toString();

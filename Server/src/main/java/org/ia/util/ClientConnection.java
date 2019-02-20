@@ -35,12 +35,12 @@ public class ClientConnection implements Runnable {
                 }
                 serverResponse.sendNotImplemented(clientRequest);
 
-            } else if (clientRequest.isPost()) {
+            } else if (clientRequest.isPost() && clientRequest.bodyExists()) {
                 if (clientRequest.getFile().endsWith("/")) {
                     clientRequest.setFile(clientRequest + ResourceConfig.DEFAULT_FILE);
                 }
 
-                String clientBody = clientRequest.readPost();
+                String clientBody = clientRequest.getPayloadString();
                     if (!clientRequest.isGetOrHead()){
                         //Puts Json in byte[] and sends to client
                         serverResponse.setJson(JsonParser.stringToJsonFormat(clientBody));

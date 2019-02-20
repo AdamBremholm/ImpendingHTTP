@@ -27,7 +27,7 @@ public class ClientConnection implements Runnable {
             clientRequest.initReaders();
             serverResponse.initWriters();
 
-
+            //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {
                 if (verbose) {
                     System.out.println("501 Not Implemented : " + clientRequest.getMethod() + " method.");
@@ -36,21 +36,22 @@ public class ClientConnection implements Runnable {
 
             }
 
-            else if (clientRequest.getFile().endsWith("/") && !clientRequest.isPost()) {
+            //Skickar startstidan om man inte skriver något mer
+            else if (clientRequest.getFile().equals("/") && !clientRequest.isPost()) {
                 clientRequest.setFile("/" + ResourceConfig.DEFAULT_FILE);
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 serverResponse.sendGet(clientRequest, file, readFileData);
             }
 
-            //No support for static post files
-            else if (isStaticFile(clientRequest) && clientRequest.isGet()){
+            //Hämtar statisk fil om fil innehåller .
+            else if (isStaticFile(clientRequest)){
 
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
                 serverResponse.sendGet(clientRequest, file, readFileData);
-
             }
+            //Dynamisk
             else if (isDynamic(clientRequest)){
 
                 if (clientRequest.isGetOrHead()){
@@ -61,7 +62,6 @@ public class ClientConnection implements Runnable {
                             && clientRequest.getFile().length() > 5) {
                         serverResponse.setJson(clientRequest.getFile());
                         serverResponse.sendPostJson();
-
                     }
 
                 } else if(clientRequest.isPost()) {
@@ -69,9 +69,19 @@ public class ClientConnection implements Runnable {
                     //Puts Json in byte[] and sends to client
                     serverResponse.setJson(JsonParser.formatSlicedUrl(clientBody));
                     serverResponse.sendPostJson();
-
                 }
+            }
+            //Plugin
+            else if (isPlugin(clientRequest)) {
 
+                //SEARCH FOR plugin and return plugin stuff
+
+            }
+
+            //Skicka file not found
+            else {
+
+                readFileData.fileNotFound(serverResponse.getOut(), serverResponse.getDataOut(), clientRequest.getFile());
             }
 
 

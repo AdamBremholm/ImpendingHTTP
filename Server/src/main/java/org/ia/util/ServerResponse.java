@@ -17,6 +17,23 @@ public class ServerResponse {
     PrintWriter out = null;
     BufferedOutputStream dataOut = null;
     String firstLine;
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public String getContentLength() {
+        return contentLength;
+    }
+
+    public void setContentLength(String contentLength) {
+        this.contentLength = contentLength;
+    }
+
     String contentType;
     String contentLength;
 
@@ -25,13 +42,6 @@ public class ServerResponse {
         this.readFileData = readFileData;
     }
 
-
-    public void sendCustom(ClientRequest clientRequest, File file, ReadFileData readFileData, List<RequestData> responseDataList){
-
-
-
-
-    }
 
     public void sendGet(ClientRequest clientRequest, File file, ReadFileData readFileData) throws IOException {
 
@@ -42,7 +52,7 @@ public class ServerResponse {
         out.println("HTTP/1.1 200 OK");
         out.println(serverName);
         out.println("Date: " + new Date());
-        out.println("Content-type: " + clientRequest.getContentType());
+        out.println("Content-type: " + getContentType());
         out.println("Content-length: " + fileLength);
         out.println(); // blank line between headers and content, very important !
         out.flush(); // flush character output stream buffer
@@ -67,7 +77,7 @@ public class ServerResponse {
         out.println("HTTP/1.1 501 Not Implemented");
         out.println(serverName);
         out.println("Date: " + new Date());
-        out.println("Content-type: " + clientRequest.getContentType());
+        out.println("Content-type: " + getContentType());
         out.println("Content-length: " + fileLength);
         out.println();
         out.flush();
@@ -97,7 +107,7 @@ public class ServerResponse {
         out.println("HTTP/1.1 200 OK");
         out.println(serverName);
         out.println("Date: " + new Date());
-        out.println("Content-type: " + clientRequest.getContentType());
+        out.println("Content-type: " + getContentType());
         out.println("Content-length: " + fileData.length);
         out.println(); // blank line between headers and content, very important !
         out.flush(); // flush character output stream buffer

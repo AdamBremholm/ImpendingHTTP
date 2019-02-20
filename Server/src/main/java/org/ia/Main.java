@@ -63,8 +63,10 @@ public class Main {
                 ServiceLoader.load(ImpendingInterface.class, ucl);
 
         for (ImpendingInterface greetings : loader) {
-            if (greetings.getClass().getAnnotation(Adress.class).value().equals("/v1/ImpendingInterFace"))
-                greetings.execute();
+            if (greetings.getClass().getAnnotation(Adress.class).value().equals("/v1/ImpendingInterFace")) {
+                //greetings.execute();
+            }
+
         }
 
 

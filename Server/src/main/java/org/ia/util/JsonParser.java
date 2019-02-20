@@ -71,5 +71,4 @@ public class JsonParser {
         }
         return list;
     }
-
 }

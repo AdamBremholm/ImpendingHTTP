@@ -1,6 +1,7 @@
 package org.ia.util;
 
 import org.ia.api.Storage;
+import org.json.simple.JSONArray;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,6 +33,26 @@ public class ListStorage implements Storage {
 
     public void close(){
         saveToFile();
+    }
+
+    @Override
+    public void addPerson(Person person) {
+
+    }
+
+    @Override
+    public String findFirstPerson(String searchParam) {
+        return null;
+    }
+
+    @Override
+    public JSONArray findAllPersons() {
+        return null;
+    }
+
+    @Override
+    public int getPersonCount() {
+        return 0;
     }
 
     private void loadFromFile() {

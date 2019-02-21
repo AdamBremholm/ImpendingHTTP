@@ -1,5 +1,7 @@
 package org.ia.util;
 
+import org.ia.api.Storage;
+
 import org.ia.Main;
 import org.ia.api.Adress;
 import org.ia.api.ImpendingInterface;
@@ -21,6 +23,8 @@ public class ClientConnection implements Runnable {
     }
     ReadFileData readFileData = new ReadFileData();
 
+    StorageController storageController = new StorageController(new MongoDB());
+
     @Override
     public void run() {
         ClientRequest clientRequest = new ClientRequest(connect);
@@ -33,6 +37,18 @@ public class ClientConnection implements Runnable {
             //In, out and dataOut
             clientRequest.initReaders();
             serverResponse.initWriters();
+
+            //DATABASE TESTING, mongoDB statistics
+//            storageController.getStorage().addRequest(clientRequest);
+//            System.out.println(storageController.getStorage().getRequests());
+//            System.out.println("Number of requests made: " + storageController.getStorage().getRequestCount());
+
+            //DATABASE TESTING 2!
+
+            Person p = new Person("Patrik", "Sysslomansgatan 25", "850213");
+            storageController.getStorage().addPerson(p);
+            System.out.println(storageController.getStorage().getPersonCount());
+            System.out.println(storageController.getStorage().findAllPersons());
 
             //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {
@@ -48,16 +64,16 @@ public class ClientConnection implements Runnable {
                 clientRequest.setFile("/" + ResourceConfig.DEFAULT_FILE);
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
-                serverResponse.sendGet(file);
+                serverResponse.sendGet(clientRequest, file, readFileData);
             }
 
             //Hämtar statisk fil om fil innehåller .
-            else if (isStaticFile(clientRequest)){
+            else if (isStaticFile(clientRequest) && !clientRequest.isPost()){
 
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
                 if (clientRequest.isGet())
-                serverResponse.sendGet(file);
+                serverResponse.sendGet(clientRequest, file, readFileData);
                 else if (clientRequest.isHead()) //Skicka bara Headers tillbaka
                     serverResponse.sendHead(clientRequest, file, readFileData);
             }
@@ -111,7 +127,7 @@ public class ClientConnection implements Runnable {
                         ServiceLoader.load(ImpendingInterface.class, ucl);
 
                 for (ImpendingInterface impendingInterfaceImplementation : loader) {
-                    if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equalsIgnoreCase(clientRequest.getFile())) {
+                    if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equals(clientRequest.getFile())) {
                         impendingInterfaceImplementation.execute(clientRequest, serverResponse);
                     }
 

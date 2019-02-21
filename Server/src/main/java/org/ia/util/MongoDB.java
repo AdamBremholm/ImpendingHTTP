@@ -63,7 +63,8 @@ public class MongoDB implements Storage {
 
     @Override
     public String findFirstPerson(String searchParam) {
-        Document doc = new Document();
+        Document doc;
+        searchParam = searchParam.replace("name=","");
 
         doc = personCollection.find(eq("name",searchParam)).first();
         return doc.toJson();

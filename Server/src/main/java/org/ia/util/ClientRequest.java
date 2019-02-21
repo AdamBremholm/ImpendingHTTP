@@ -99,7 +99,7 @@ public class ClientRequest {
     }
 
     public boolean bodyExists() {
-        if (findFirstValueByType("Content-Length")!=null) {
+        if (findFirstValueByType("Content-Length")!=null && !findFirstValueByType("Content-Length").equals("")) {
             return Integer.parseInt(findFirstValueByType("Content-Length")) > 0;
         }
         else return false;
@@ -112,8 +112,15 @@ public class ClientRequest {
     }
 
     public String findFirstValueByType(String type) {
-        //TODO: kolla för null
-      return requestDataList.stream().filter(requestData -> requestData.getType().equals(type)).findFirst().get().getValue();
+        String value = "";
+        try {
+            value = requestDataList.stream().filter(requestData -> requestData.getType().equals(type)).findFirst().get().getValue();
+        } catch (Exception e) {
+            return "";
+        }
+        return value;
+
+
     }
 
     public String getContentType() {

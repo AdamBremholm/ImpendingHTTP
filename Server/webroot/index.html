@@ -4,14 +4,14 @@
 
 <h2>Enter your details.</h2>
 
-<form action="/SaveToDBPlugin" method="post" onsubmit="submitFunction()">
+<form action="/" method="post" onsubmit="submitFunction()">
     Full name:<br>
     <input type="text" id="fullName" name="fullName" value="fullName">
     <br><br>
     Adress:<br>
     <input type="text" name="address" id="address" value="address">
     <br><br>
-    Birth date:<br>
+    Date of birth:<br>
     <input type="text" name="dateOfBirth" id="dateOfBirth" value="dateOfBirth">
     <br><br>
     Gender<br>
@@ -20,13 +20,18 @@
         <option id="Female" value="Female">Female</option>
     </select>
     <br><br>
-    <input type="submit" value="submit">
+    <input type="submit" value="Add">
+</form>
+
+<form action="/" method="post">
+    <label for="search">Search customer by name:</label>
+    <input type="search" id="search" name="name" aria-label="Search through the database for customer.">
+    <button>Find</button>
 </form>
 
 <script>
     function submitFunction(){
         alert("The form has been submitted");
-
     }
 </script>
 

@@ -7,19 +7,19 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.MongoClient;
 
-import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
 import org.bson.Document;
-import org.bson.json.JsonReader;
 import org.ia.api.Storage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.mongodb.client.model.Projections.*;
 
 public class MongoDB implements Storage {
 
@@ -27,7 +27,7 @@ public class MongoDB implements Storage {
     private Logger mongoLogger;
     private MongoDatabase database;
     MongoCollection<Document> collection;
-    MongoCollection<Person> personCollection;
+    MongoCollection<Document> personCollection;
 
     public MongoDB() {
         mongo = new MongoClient( "localhost", 27017);
@@ -35,7 +35,7 @@ public class MongoDB implements Storage {
         mongoLogger.setLevel(Level.SEVERE);
         database = mongo.getDatabase("ImpendingHTTP");
         collection = database.getCollection("stats");
-        personCollection = database.getCollection("persons", Person.class);
+        personCollection = database.getCollection("persons");
     }
 
     public int getRequestCount() {
@@ -49,35 +49,33 @@ public class MongoDB implements Storage {
 
     @Override
     public void addPerson(Person person) {
-        personCollection.insertOne(person);
+        Document doc = new Document();
 
-//        collection.insertOne(new Document().parse("{\"blue\":\"groon\",\"name\":\"adam\",\"skor\":\"true\"}"));
+        doc.put("name",person.getName());
+        doc.put("address",person.getAddress());
+        doc.put("dateOfBirth",person.getDateOfBirth());
+
+        personCollection.insertOne(doc);
     }
 
     @Override
     public String findFirstPerson(String searchParam) {
 //        personCollection = database.getCollection("persons");
 //        Document doc = personCollection.find();
-
         return null;
-
     }
 
     @Override
-    public JSONArray findAllPersons() {
-        JSONArray list = new JSONArray();
+    public ArrayList<String> findAllPersons() {
+        ArrayList<String> list = new ArrayList<>();
 
-        StringBuilder sb = new StringBuilder();
-        FindIterable<Person> iterDoc = personCollection.find();
-        int i = 1;
+        FindIterable<Document> results = personCollection.find().projection(excludeId());
+        MongoCursor<Document> cursor = results.iterator();
 
-        Iterator it = iterDoc.iterator();
-        while (it.hasNext()) {
-
-            list.add(new JSONObject( (JSONObject) it.next()));
-            i++;
+        while (cursor.hasNext()) {
+            list.add(cursor.next().toJson());
         }
-        ((MongoCursor) it).close(); // Håll koll - ska den stängas? Kan ge fel.
+        cursor.close(); // Håll koll - ska den stängas? Kan ge fel.
         return list;
     }
 

@@ -46,7 +46,7 @@ public class ListStorage implements Storage {
     }
 
     @Override
-    public JSONArray findAllPersons() {
+    public ArrayList<String> findAllPersons() {
         return null;
     }
 

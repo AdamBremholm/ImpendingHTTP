@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ImpendingHTTP</title>
+<style>
+    html {
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        background-image: url("sunflower.png");
+    }
+
+    .float-right {
+        position: absolute;
+        right: 0;
+    }
+</style>
+<body>
+<form action="submit.php" method="POST">
+
+    <p>Form to test POST method</p>
+    <br><br>
+    Full Name:
+    <br>
+    <input type="text" id="pfullName" name="fullName" value="fullName">
+    <br><br>
+    Adress:<br>
+    <input type="text" name="address" id="paddress" value="address">
+    <br><br>
+    Birth date:<br>
+    <input type="text" name="dateOfBirth" id="pdateOfBirth" value="dateOfBirth">
+    <br><br>
+    <input type="submit" value="submit">
+
+</form>
+
+<form action="/json" method="GET">
+    <p>Form to test GET method</p>
+    <br><br>
+    Full name:<br>
+    <input type="text" id="gName" name="fullName" value="fullName">
+    <br><br>
+    Adress:<br>
+    <input type="text" name="address" id="gaddress" value="address">
+    <br><br>
+    Birth date:<br>
+    <input type="text" name="dateOfBirth" id="gdateOfBirth" value="dateOfBirth">
+    <br><br>
+    <input type="submit" value="submit">
+</form>
+</body>
+
+<a href=""></a>
+
+<a href=""></a>
+
+
+</html>

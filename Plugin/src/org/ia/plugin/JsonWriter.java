@@ -12,7 +12,10 @@ public class JsonWriter implements org.ia.api.ImpendingInterface {
 
 
     @Override
-    public void execute(ClientRequest clientRequest, ServerResponse serverResponse) {
+    public ServerResponse execute(ServerResponse serverResponse) {
+
+        serverResponse.setJson("{\"name\" : \"Adam\"}");
+        return serverResponse;
 
 
     }

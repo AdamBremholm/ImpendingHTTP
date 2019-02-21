@@ -13,7 +13,6 @@ public class ClientConnection implements Runnable {
         connect = c;
     }
     ReadFileData readFileData = new ReadFileData();
-    DBConnection dbConnection = new DBConnection();
 
     @Override
     public void run() {
@@ -28,59 +27,87 @@ public class ClientConnection implements Runnable {
             clientRequest.initReaders();
             serverResponse.initWriters();
 
-//TODO: MongoDB som modul. Nedan är testning. Starta Mongoshell, så lyssnar mongo på default port (27017).
-//
-//            dbConnection.connectToDB();
-//            dbConnection.statsAddConnection(clientRequest);
-//
-//            dbConnection.statsPrintConnections();
-//            dbConnection.statsCountConnections();
-
-
-
+            //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {
                 if (verbose) {
                     System.out.println("501 Not Implemented : " + clientRequest.getMethod() + " method.");
                 }
                 serverResponse.sendNotImplemented(clientRequest);
 
-            } else if (clientRequest.isPost() && clientRequest.bodyExists()) {
-                if (clientRequest.getFile().endsWith("/")) {
-                    clientRequest.setFile(clientRequest + ResourceConfig.DEFAULT_FILE);
-                }
+            }
 
-                String clientBody = clientRequest.getPayloadString();
-                    if (!clientRequest.isGetOrHead()){
+            //Skickar startstidan om man inte skriver något mer
+            else if (clientRequest.getFile().equals("/") && !clientRequest.bodyExists()) {
+                clientRequest.setFile("/" + ResourceConfig.DEFAULT_FILE);
+                serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
+                File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
+                serverResponse.sendGet(clientRequest, file, readFileData);
+            }
+
+            //Hämtar statisk fil om fil innehåller .
+            else if (isStaticFile(clientRequest)){
+
+                File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
+                serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
+                if (clientRequest.isGet())
+                serverResponse.sendGet(clientRequest, file, readFileData);
+                else if (clientRequest.isHead()) //Skicka bara Headers tillbaka
+                    serverResponse.sendHead(clientRequest, file, readFileData);
+            }
+            //Dynamisk
+            else if (isDynamic(clientRequest)){
+
+                if (clientRequest.isGetOrHead()){
+
+                    // Converts url string
+                    if (clientRequest.isGet()
+                            && clientRequest.getFile().startsWith("/json")
+                            && clientRequest.getFile().length() > 5) {
+                        serverResponse.setJson(clientRequest.getFile());
+                        serverResponse.sendPostJson();
+                    } else if (clientRequest.isHead()
+                            && clientRequest.getFile().startsWith("/json")
+                            && clientRequest.getFile().length() > 5) {
+                        serverResponse.setJson(clientRequest.getFile());
+                        serverResponse.sendHeadJson();
+                        //Skicka bara Headers tillbaka
+                    }
+                    else { //Send not implemented if unsupported URL.
+                        serverResponse.sendNotImplemented(clientRequest);
+                    }
+
+                } else if(clientRequest.isPost()) {
+
+                    if (clientRequest.bodyExists()) {
+                        String clientBody = clientRequest.getPayloadString();
                         //Puts Json in byte[] and sends to client
                         serverResponse.setJson(JsonParser.formatSlicedUrl(clientBody));
                         serverResponse.sendPostJson();
-                    } else {
+
+                    } else if (clientRequest.getFile().startsWith("/json") //Om post men utan body och json i url
+                            && clientRequest.getFile().length() > 5) {
+                        serverResponse.setJson(clientRequest.getFile());
+                        serverResponse.sendPostJson();
+
+                    } else { //Om ingen body och ingen jsonurl
                         serverResponse.sendNotImplemented(clientRequest);
                     }
-            } else {
-                // GET or HEAD method
-                if (clientRequest.getFile().endsWith("/")) {
-                    clientRequest.setFile(clientRequest.getFile() + ResourceConfig.DEFAULT_FILE);
-                }
-
-                File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
-                // int fileLength = (int) file.length();
-                clientRequest.setContentType(readFileData.getContentType(clientRequest.getFile()));
-
-                if (clientRequest.isGet()
-                        && clientRequest.getFile().startsWith("/json")
-                        && clientRequest.getFile().length() > 5) {
-                    serverResponse.setJson(clientRequest.getFile());
-                    serverResponse.sendPostJson();
-
-                } else if (clientRequest.isGet()) { // GET method so we return content
-                    serverResponse.sendGet(clientRequest, file, readFileData);
-                }
-
-                if (verbose) {
-                    System.out.println("File " + clientRequest.getFile() + " of type " + clientRequest.getContentType() + " returned");
                 }
             }
+            //Plugin
+            else if (isPlugin(clientRequest)) {
+
+                //SEARCH FOR plugin and return plugin stuff
+
+            }
+
+            //Skicka file not found
+            else {
+
+                readFileData.fileNotFound(serverResponse.getOut(), serverResponse.getDataOut(), clientRequest.getFile());
+            }
+
+
 
         } catch (FileNotFoundException fnfe) {
             try {
@@ -103,5 +130,26 @@ public class ClientConnection implements Runnable {
                 System.out.println("Connection closed.\n");
             }
         }
+    }
+
+    private boolean isStaticFile(ClientRequest clientRequest) {
+        if (clientRequest.getFile().contains("."))  {
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean isPlugin(ClientRequest clientRequest){
+        if (!isStaticFile(clientRequest) && !clientRequest.getFile().contains("?") && !clientRequest.getFile().contains("=") && !clientRequest.getFile().equals("/")) {
+            return true;
+        } else
+            return false;
+    }
+
+    private boolean isDynamic(ClientRequest clientRequest) {
+        if (!isStaticFile(clientRequest) && !(isPlugin(clientRequest))) {
+            return true;
+        } else
+            return false;
     }
 }

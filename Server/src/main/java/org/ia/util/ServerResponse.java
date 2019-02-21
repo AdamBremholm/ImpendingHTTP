@@ -16,7 +16,7 @@ public class ServerResponse {
     ReadFileData readFileData;
     PrintWriter out = null;
     BufferedOutputStream dataOut = null;
-    String firstLine;
+
 
     public String getContentType() {
         return contentType;
@@ -101,8 +101,24 @@ public class ServerResponse {
         dataOut.flush();
     }
 
-    public void sendPost(ClientRequest clientRequest, ReadFileData readFileData, File file) throws IOException {
-        byte[] fileData = readFileData.readFileData(file, (int)file.length());
+    public void sendPostHTML(String htmlString) throws IOException {
+
+        byte htmlBytes[] = htmlString.getBytes();
+
+        out.println("HTTP/1.1 200 OK");
+        out.println(serverName);
+        out.println("Date: " + new Date());
+        out.println("Content-type: " + "text/html");
+        out.println("Content-length: " + htmlBytes.length);
+        out.println(); // blank line between headers and content, very important !
+        out.flush(); // flush character output stream buffer
+
+        dataOut.write(htmlBytes);
+        dataOut.flush();
+    }
+
+    public void sendPost(ClientRequest clientRequest, File file) throws IOException {
+        byte[] fileData = ReadFileData.readFileData(file, (int)file.length());
 
         out.println("HTTP/1.1 200 OK");
         out.println(serverName);

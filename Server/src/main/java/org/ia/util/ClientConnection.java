@@ -111,7 +111,7 @@ public class ClientConnection implements Runnable {
                         ServiceLoader.load(ImpendingInterface.class, ucl);
 
                 for (ImpendingInterface impendingInterfaceImplementation : loader) {
-                    if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equals(clientRequest.getFile())) {
+                    if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equalsIgnoreCase(clientRequest.getFile())) {
                         impendingInterfaceImplementation.execute(clientRequest, serverResponse);
                     }
 

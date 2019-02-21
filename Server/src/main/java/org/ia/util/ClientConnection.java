@@ -1,7 +1,14 @@
 package org.ia.util;
 
+import org.ia.Main;
+import org.ia.api.Adress;
+import org.ia.api.ImpendingInterface;
+
 import java.io.*;
 import java.net.Socket;
+import java.net.URLClassLoader;
+import java.util.ServiceLoader;
+import java.net.MalformedURLException;
 
 public class ClientConnection implements Runnable {
 
@@ -97,7 +104,18 @@ public class ClientConnection implements Runnable {
             //Plugin
             else if (isPlugin(clientRequest)) {
 
-                //SEARCH FOR plugin and return plugin stuff
+
+                URLClassLoader ucl = ServiceLoaderUtil.createClassLoader(Main.getPluginFolder());
+
+                ServiceLoader<ImpendingInterface> loader =
+                        ServiceLoader.load(ImpendingInterface.class, ucl);
+
+                for (ImpendingInterface impendingInterfaceImplementation : loader) {
+                    if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equals(clientRequest.getFile())) {
+                        impendingInterfaceImplementation.execute(clientRequest, serverResponse);
+                    }
+
+                }
 
             }
 

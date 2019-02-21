@@ -1,5 +1,7 @@
 package org.ia.util;
 
+import org.ia.api.Storage;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -14,6 +16,8 @@ public class ClientConnection implements Runnable {
     }
     ReadFileData readFileData = new ReadFileData();
 
+    StorageController storageController = new StorageController(new MongoDB());
+
     @Override
     public void run() {
         ClientRequest clientRequest = new ClientRequest(connect);
@@ -26,6 +30,11 @@ public class ClientConnection implements Runnable {
             //In, out and dataOut
             clientRequest.initReaders();
             serverResponse.initWriters();
+
+            //DATABASE TESTING, mongoDB statistics
+//            storageController.getStorage().addRequest(clientRequest);
+//            System.out.println(storageController.getStorage().getRequests());
+//            System.out.println("Number of requests made: " + storageController.getStorage().getRequestCount());
 
             //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {
@@ -45,7 +54,7 @@ public class ClientConnection implements Runnable {
             }
 
             //Hämtar statisk fil om fil innehåller .
-            else if (isStaticFile(clientRequest)){
+            else if (isStaticFile(clientRequest) && !clientRequest.isPost()){
 
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));

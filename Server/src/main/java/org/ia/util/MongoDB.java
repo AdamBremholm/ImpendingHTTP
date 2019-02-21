@@ -56,7 +56,7 @@ public class MongoDB implements Storage {
 
         Iterator it = iterDoc.iterator();
         while (it.hasNext()) {
-            sb.append(it.next() + "/n");
+            sb.append(it.next() + "\n");
 //            System.out.println(it.next());
             i++;
         }

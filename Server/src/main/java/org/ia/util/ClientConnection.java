@@ -45,10 +45,12 @@ public class ClientConnection implements Runnable {
 
             //DATABASE TESTING 2!
 
-            Person p = new Person("Patrik", "Sysslomansgatan 25", "850213");
+            Person p = new Person("Elin", "Ramberget", "830502");
+
             storageController.getStorage().addPerson(p);
             System.out.println(storageController.getStorage().getPersonCount());
             System.out.println(storageController.getStorage().findAllPersons());
+            System.out.println(storageController.getStorage().findFirstPerson("Elin"));
 
             //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {

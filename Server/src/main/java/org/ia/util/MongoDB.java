@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.MongoClient;
+import com.mongodb.client.model.Filters.*;
 
 import org.bson.Document;
 import org.ia.api.Storage;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Projections.*;
 
 public class MongoDB implements Storage {
@@ -51,6 +53,7 @@ public class MongoDB implements Storage {
     public void addPerson(Person person) {
         Document doc = new Document();
 
+        doc.put("_id",(int)personCollection.countDocuments()+1);
         doc.put("name",person.getName());
         doc.put("address",person.getAddress());
         doc.put("dateOfBirth",person.getDateOfBirth());
@@ -60,16 +63,17 @@ public class MongoDB implements Storage {
 
     @Override
     public String findFirstPerson(String searchParam) {
-//        personCollection = database.getCollection("persons");
-//        Document doc = personCollection.find();
-        return null;
+        Document doc = new Document();
+
+        doc = personCollection.find(eq("name",searchParam)).first();
+        return doc.toJson();
     }
 
     @Override
     public ArrayList<String> findAllPersons() {
         ArrayList<String> list = new ArrayList<>();
 
-        FindIterable<Document> results = personCollection.find().projection(excludeId());
+        FindIterable<Document> results = personCollection.find(); //.projection(excludeId());
         MongoCursor<Document> cursor = results.iterator();
 
         while (cursor.hasNext()) {
@@ -103,7 +107,6 @@ public class MongoDB implements Storage {
         Iterator it = iterDoc.iterator();
         while (it.hasNext()) {
             sb.append(it.next() + "\n");
-//            System.out.println(it.next());
             i++;
         }
         ((MongoCursor) it).close(); // Håll koll - ska den stängas? Kan ge fel.

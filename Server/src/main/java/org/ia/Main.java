@@ -14,6 +14,13 @@ import java.util.ServiceLoader;
 
 public class Main {
 
+    public static String getPluginFolder() {
+        return pluginFolder;
+    }
+
+
+    private static String pluginFolder;
+
     public static void main( String[] args )
     {
 
@@ -25,29 +32,12 @@ public class Main {
 
     }
 
-    private URLClassLoader createClassLoader(String fileLocation) {
-        File loc = new File(fileLocation);
 
-        File[] flist = loc.listFiles(new FileFilter() {
-            public boolean accept(File file) {
-                return file.getPath().toLowerCase().endsWith(".jar");
-            }
-        });
-        URL[] urls = new URL[flist.length];
-        for (int i = 0; i < flist.length; i++) {
-            try {
-                urls[i] = flist[i].toURI().toURL();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
-        return new URLClassLoader(urls);
-    }
 
 
     private void run(String[] args) {
 
-        String pluginFolder = "";
+         pluginFolder = "";
         //if no arguments set to current directory
         if (args.length==0) {
             pluginFolder = "./";
@@ -55,19 +45,6 @@ public class Main {
             pluginFolder = args[0];
         }
 
-
-
-        URLClassLoader ucl = createClassLoader(pluginFolder);
-
-        ServiceLoader<ImpendingInterface> loader =
-                ServiceLoader.load(ImpendingInterface.class, ucl);
-
-        for (ImpendingInterface greetings : loader) {
-            if (greetings.getClass().getAnnotation(Adress.class).value().equals("/v1/ImpendingInterFace")) {
-                //greetings.execute();
-            }
-
-        }
 
 
         JavaHTTPServer.startServer();

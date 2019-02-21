@@ -2,19 +2,23 @@ package org.ia.plugin;
 
 import org.ia.api.Adress;
 import org.ia.util.ClientRequest;
-import org.ia.util.RequestData;
 import org.ia.util.ServerResponse;
+import java.io.IOException;
 
-import java.net.Socket;
 
-@Adress("/v1/ImpendingInterFace")
+@Adress("/v1/JsonWriter")
 public class JsonWriter implements org.ia.api.ImpendingInterface {
 
 
     @Override
-    public ServerResponse execute(ServerResponse serverResponse) {
+    public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {
 
-        serverResponse.setJson("{\"name\" : \"Adam\"}");
+        serverResponse.setJson("?name=Adam");
+        try {
+            serverResponse.sendPostJson();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return serverResponse;
 
 

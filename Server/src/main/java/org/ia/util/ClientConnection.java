@@ -1,9 +1,14 @@
 package org.ia.util;
 
-import org.ia.api.Storage;
+import org.ia.Main;
+import org.ia.api.Adress;
+import org.ia.api.ImpendingInterface;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URLClassLoader;
+import java.util.ServiceLoader;
+import java.net.MalformedURLException;
 
 public class ClientConnection implements Runnable {
 
@@ -15,8 +20,6 @@ public class ClientConnection implements Runnable {
         connect = c;
     }
     ReadFileData readFileData = new ReadFileData();
-
-    StorageController storageController = new StorageController(new MongoDB());
 
     @Override
     public void run() {
@@ -30,11 +33,6 @@ public class ClientConnection implements Runnable {
             //In, out and dataOut
             clientRequest.initReaders();
             serverResponse.initWriters();
-
-            //DATABASE TESTING, mongoDB statistics
-//            storageController.getStorage().addRequest(clientRequest);
-//            System.out.println(storageController.getStorage().getRequests());
-//            System.out.println("Number of requests made: " + storageController.getStorage().getRequestCount());
 
             //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {
@@ -54,7 +52,7 @@ public class ClientConnection implements Runnable {
             }
 
             //Hämtar statisk fil om fil innehåller .
-            else if (isStaticFile(clientRequest) && !clientRequest.isPost()){
+            else if (isStaticFile(clientRequest)){
 
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
@@ -106,7 +104,18 @@ public class ClientConnection implements Runnable {
             //Plugin
             else if (isPlugin(clientRequest)) {
 
-                //SEARCH FOR plugin and return plugin stuff
+
+                URLClassLoader ucl = ServiceLoaderUtil.createClassLoader(Main.getPluginFolder());
+
+                ServiceLoader<ImpendingInterface> loader =
+                        ServiceLoader.load(ImpendingInterface.class, ucl);
+
+                for (ImpendingInterface impendingInterfaceImplementation : loader) {
+                    if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equals(clientRequest.getFile())) {
+                        impendingInterfaceImplementation.execute(clientRequest, serverResponse);
+                    }
+
+                }
 
             }
 

@@ -6,6 +6,6 @@ import org.ia.util.ServerResponse;
 
 public interface ImpendingInterface {
 
-    ServerResponse execute(ServerResponse serverResponse);
+    ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse);
     //Ska returna serverrespone
 }

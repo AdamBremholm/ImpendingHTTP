@@ -43,10 +43,10 @@ public class ServerResponse {
     }
 
 
-    public void sendGet(ClientRequest clientRequest, File file, ReadFileData readFileData) throws IOException {
+    public void sendGet(File file) throws IOException {
 
         int fileLength = (int) file.length();
-        byte[] fileData = readFileData.readFileData(file, fileLength);
+        byte[] fileData = ReadFileData.readFileData(file, fileLength);
 
         // send HTTP Headers
         out.println("HTTP/1.1 200 OK");

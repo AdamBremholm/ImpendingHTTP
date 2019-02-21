@@ -85,8 +85,8 @@ public class ClientRequest {
 
 
         //kollar om det är post och om det finns en body med och kör nedre delen av readPostmetoden
+        payload = new StringBuilder();
         if (isPost() && bodyExists()) {
-            payload = new StringBuilder();
             while(in.ready()){
                 payload.append((char) in.read());
             }

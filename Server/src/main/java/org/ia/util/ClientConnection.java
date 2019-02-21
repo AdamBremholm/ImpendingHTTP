@@ -64,7 +64,7 @@ public class ClientConnection implements Runnable {
                 clientRequest.setFile("/" + ResourceConfig.DEFAULT_FILE);
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
-                serverResponse.sendGet(clientRequest, file, readFileData);
+                serverResponse.sendGet(file);
             }
 
             //Hämtar statisk fil om fil innehåller .
@@ -73,7 +73,7 @@ public class ClientConnection implements Runnable {
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
                 if (clientRequest.isGet())
-                serverResponse.sendGet(clientRequest, file, readFileData);
+                serverResponse.sendGet(file);
                 else if (clientRequest.isHead()) //Skicka bara Headers tillbaka
                     serverResponse.sendHead(clientRequest, file, readFileData);
             }
@@ -127,7 +127,7 @@ public class ClientConnection implements Runnable {
                         ServiceLoader.load(ImpendingInterface.class, ucl);
 
                 for (ImpendingInterface impendingInterfaceImplementation : loader) {
-                    if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equals(clientRequest.getFile())) {
+                    if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equalsIgnoreCase(clientRequest.getFile())) {
                         impendingInterfaceImplementation.execute(clientRequest, serverResponse);
                     }
 

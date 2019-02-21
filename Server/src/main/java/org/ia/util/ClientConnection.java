@@ -23,7 +23,7 @@ public class ClientConnection implements Runnable {
     }
     ReadFileData readFileData = new ReadFileData();
 
-    StorageController storageController = new StorageController(new MongoDB());
+  //  StorageController storageController = new StorageController(new MongoDB());
 
     @Override
     public void run() {
@@ -45,10 +45,10 @@ public class ClientConnection implements Runnable {
 
             //DATABASE TESTING 2!
 
-            Person p = new Person("Patrik", "Sysslomansgatan 25", "850213");
-            storageController.getStorage().addPerson(p);
-            System.out.println(storageController.getStorage().getPersonCount());
-            System.out.println(storageController.getStorage().findAllPersons());
+//            Person p = new Person("Patrik", "Sysslomansgatan 25", "850213");
+//            storageController.getStorage().addPerson(p);
+//            System.out.println(storageController.getStorage().getPersonCount());
+//            System.out.println(storageController.getStorage().findAllPersons());
 
             //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {

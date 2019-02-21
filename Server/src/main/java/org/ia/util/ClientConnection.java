@@ -37,7 +37,7 @@ public class ClientConnection implements Runnable {
             }
 
             //Skickar startstidan om man inte skriver något mer
-            else if (clientRequest.getFile().equals("/") && !clientRequest.isPost()) {
+            else if (clientRequest.getFile().equals("/") && !clientRequest.bodyExists()) {
                 clientRequest.setFile("/" + ResourceConfig.DEFAULT_FILE);
                 serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
                 File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
@@ -72,12 +72,26 @@ public class ClientConnection implements Runnable {
                         serverResponse.sendHeadJson();
                         //Skicka bara Headers tillbaka
                     }
+                    else { //Send not implemented if unsupported URL.
+                        serverResponse.sendNotImplemented(clientRequest);
+                    }
 
                 } else if(clientRequest.isPost()) {
-                    String clientBody = clientRequest.getPayloadString();
-                    //Puts Json in byte[] and sends to client
-                    serverResponse.setJson(JsonParser.formatSlicedUrl(clientBody));
-                    serverResponse.sendPostJson();
+
+                    if (clientRequest.bodyExists()) {
+                        String clientBody = clientRequest.getPayloadString();
+                        //Puts Json in byte[] and sends to client
+                        serverResponse.setJson(JsonParser.formatSlicedUrl(clientBody));
+                        serverResponse.sendPostJson();
+
+                    } else if (clientRequest.getFile().startsWith("/json") //Om post men utan body och json i url
+                            && clientRequest.getFile().length() > 5) {
+                        serverResponse.setJson(clientRequest.getFile());
+                        serverResponse.sendPostJson();
+
+                    } else { //Om ingen body och ingen jsonurl
+                        serverResponse.sendNotImplemented(clientRequest);
+                    }
                 }
             }
             //Plugin

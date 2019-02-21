@@ -98,7 +98,10 @@ public class ClientRequest {
     }
 
     public boolean bodyExists() {
-        return Integer.parseInt(findFirstValueByType("Content-Length").trim()) > 0;
+        if (findFirstValueByType("Content-Length")!=null) {
+            return Integer.parseInt(findFirstValueByType("Content-Length")) > 0;
+        }
+        else return false;
     }
 
     public void printRequestObjectList() {

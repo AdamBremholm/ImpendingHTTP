@@ -1,5 +1,5 @@
 function submitform(){
-    alert("Hello, I'm an alert");
+    alert("Your form has been submitted");
 
 }
 

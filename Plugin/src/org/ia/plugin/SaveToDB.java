@@ -9,7 +9,9 @@ import org.ia.util.ServerResponse;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Adress("/v1/SaveToDB")
@@ -19,6 +21,7 @@ public class SaveToDB implements ImpendingInterface {
     public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {
 
         Person person = new Person();
+      // final List<Person> personList = new ArrayList<>(); Se om man kan göra en lösning med arrayList
 
         String htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n" +
@@ -35,17 +38,11 @@ public class SaveToDB implements ImpendingInterface {
                 "    Birth date:<br>\n" +
                 "    <input type=\"text\" name=\"dateOfBirth\" id=\"dateOfBirth\" value=\"dateOfBirth\">\n" +
                 "    <br><br>\n" +
-                "    Gender<br>\n" +
-                "    <select name=\"gender\">\n" +
-                "        <option id=\"Male\" value=\"Male\"> Male</option>\n" +
-                "        <option id=\"Female\" value=\"Female\">Female</option>\n" +
-                "    </select>\n" +
-                "    <br><br>\n" +
                 "    <input type=\"submit\" value=\"submit\">\n" +
                 "</form>" +
                 "\n" +
-                "<p>Here is the person: " + "" + "</p>\n"+
-                "+\n" +
+                "<p> </p>\n"+
+                "\n" +
                 "</body>\n" +
                 "</html>\n";
 
@@ -57,6 +54,7 @@ public class SaveToDB implements ImpendingInterface {
             person.setName(jsonObject.get("fullName").toString());
             person.setAdress(jsonObject.get("address").toString());
             person.setDateOfBirth(jsonObject.get("dateOfBirth").toString());
+
 
             String htmlString2 = "<!DOCTYPE html>\n" +
                     "<html>\n" +
@@ -73,17 +71,11 @@ public class SaveToDB implements ImpendingInterface {
                     "    Birth date:<br>\n" +
                     "    <input type=\"text\" name=\"dateOfBirth\" id=\"dateOfBirth\" value=\"dateOfBirth\">\n" +
                     "    <br><br>\n" +
-                    "    Gender<br>\n" +
-                    "    <select name=\"gender\">\n" +
-                    "        <option id=\"Male\" value=\"Male\"> Male</option>\n" +
-                    "        <option id=\"Female\" value=\"Female\">Female</option>\n" +
-                    "    </select>\n" +
-                    "    <br><br>\n" +
                     "    <input type=\"submit\" value=\"submit\">\n" +
                     "</form>" +
                     "\n" +
                     "<p>Here is the person: " + person + "</p>\n"+
-                    "+\n" +
+                    "\n" +
                     "</body>\n" +
                     "</html>\n";
             try {

@@ -14,8 +14,7 @@ import java.util.ServiceLoader;
 
 public class Main {
 
-    public static void main( String[] args )
-    {
+    public static void main(String[] args) {
 
         Main main = new Main();
         main.run(args);
@@ -49,12 +48,11 @@ public class Main {
 
         String pluginFolder = "";
         //if no arguments set to current directory
-        if (args.length==0) {
+        if (args.length == 0) {
             pluginFolder = "./";
         } else {
             pluginFolder = args[0];
         }
-
 
 
         URLClassLoader ucl = createClassLoader(pluginFolder);
@@ -63,16 +61,17 @@ public class Main {
                 ServiceLoader.load(ImpendingInterface.class, ucl);
 
         for (ImpendingInterface greetings : loader) {
-            if (greetings.getClass().getAnnotation(Adress.class).value().equals("/v1/ImpendingInterFace"))
-                greetings.execute();
+            if (greetings.getClass().getAnnotation(Adress.class).value().equals("/v1/ImpendingInterFace")) {
+                //greetings.execute();
+            }
+
+
+
+
+
         }
-
-
         JavaHTTPServer.startServer();
 
 
     }
-
-
-
 }

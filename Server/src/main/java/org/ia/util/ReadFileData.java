@@ -7,9 +7,7 @@ public class ReadFileData {
 
     private static boolean verbose = true;
 
-    ResourceConfig resourceConfig;
-
-     byte[] readFileData(File file, int fileLength) throws IOException {
+    public static byte[] readFileData(File file, int fileLength) throws IOException {
         FileInputStream fileIn = null;
         byte[] fileData = new byte[fileLength];
 

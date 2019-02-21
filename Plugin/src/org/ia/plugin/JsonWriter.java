@@ -8,7 +8,7 @@ import org.ia.util.ServerResponse;
 import java.io.IOException;
 import java.net.Socket;
 
-@Adress("/v1/jsonwriter")
+@Adress("/v1/JsonWriter")
 public class JsonWriter implements org.ia.api.ImpendingInterface {
 
 

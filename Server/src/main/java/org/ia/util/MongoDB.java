@@ -5,7 +5,6 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters.*;
 
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
@@ -15,16 +14,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Projections.*;
 
 public class MongoDB implements Storage {
 
@@ -35,11 +31,8 @@ public class MongoDB implements Storage {
     private MongoDatabase database;
     MongoCollection<Document> collection;
     MongoCollection<Document> personCollection;
-    String user = "ImpendingUser";
-    String password = "impendingpassword";
 
     public MongoDB() {
-        MongoCredential credential = MongoCredential.createCredential(user, "database", password.toCharArray());
         mongo = new MongoClient(uri);
         mongoLogger = Logger.getLogger("org.mongodb.driver");
         mongoLogger.setLevel(Level.SEVERE);
@@ -66,20 +59,11 @@ public class MongoDB implements Storage {
         query.append("address",person.getAddress());
         query.append("dateOfBirth",person.getDateOfBirth());
 
-
-//        doc.append("_id",(int)personCollection.countDocuments()+1);
         doc.append("name",person.getName());
         doc.append("address",person.getAddress());
         doc.append("dateOfBirth",person.getDateOfBirth());
 
-//        and(
-//                eq ("name",person.getName()),
-//                eq ("address",person.getAddress()),
-//                eq ("dateOfBirth",person.getDateOfBirth())),
-
-//        personCollection.insertOne(doc);
         personCollection.replaceOne( query, doc, new UpdateOptions().upsert(true));
-//        personCollection.updateOne(doc, doc);
     }
 
     @Override

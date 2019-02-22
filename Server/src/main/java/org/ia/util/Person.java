@@ -1,9 +1,10 @@
 package org.ia.util;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Person {
+public class Person implements Serializable {
     String name, address, dateOfBirth;
 
     public Person(){}

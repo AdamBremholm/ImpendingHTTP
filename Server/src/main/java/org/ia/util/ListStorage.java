@@ -9,8 +9,8 @@ import java.util.List;
 
 public class ListStorage implements Storage {
 
-    ArrayList<ClientRequest> requests = new ArrayList<>();
-
+    List<ClientRequest> requests = new ArrayList<>();
+    List<Person> persons = new ArrayList<>();
     public ListStorage(){
         //Läs in sparade kunder från fil
         loadFromFile();
@@ -37,22 +37,28 @@ public class ListStorage implements Storage {
 
     @Override
     public void addPerson(Person person) {
-
+        persons.add(person);
     }
 
     @Override
     public String findFirstPerson(String searchParam) {
-        return null;
+
+        for (Person person: persons) {
+            if (searchParam.equalsIgnoreCase(searchParam)) {
+                return person.toString();
+            }
+        }
+        return searchParam + " not found.";
     }
 
     @Override
-    public JSONArray findAllPersons() {
+    public ArrayList<String> findAllPersons() {
         return null;
     }
 
     @Override
     public int getPersonCount() {
-        return 0;
+        return persons.size();
     }
 
     private void loadFromFile() {

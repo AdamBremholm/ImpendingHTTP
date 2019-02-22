@@ -23,7 +23,7 @@ public class ClientConnection implements Runnable {
     }
     ReadFileData readFileData = new ReadFileData();
 
-  //  StorageController storageController = new StorageController(new MongoDB());
+    StorageController storageController = new StorageController(new MongoDB());
 
     @Override
     public void run() {
@@ -38,18 +38,14 @@ public class ClientConnection implements Runnable {
             clientRequest.initReaders();
             serverResponse.initWriters();
 
-            //DATABASE TESTING, mongoDB statistics
-//            storageController.getStorage().addRequest(clientRequest);
-//            System.out.println(storageController.getStorage().getRequests());
-//            System.out.println("Number of requests made: " + storageController.getStorage().getRequestCount());
 
-            //DATABASE TESTING 2!
-
-//            Person p = new Person("Patrik", "Sysslomansgatan 25", "850213");
-//            storageController.getStorage().addPerson(p);
-//            System.out.println(storageController.getStorage().getPersonCount());
-//            System.out.println(storageController.getStorage().findAllPersons());
-
+            //TODO: DB search från find-button. Hade velat göra om find till att den kollar hela formuläret och gör
+            //en ny Person om det inte redan finns en. 1 Sök, 2 Skapa. Skicka genom plugins. Note: Kan inte ligga i en
+            //sån if, måste hamna i rätt /, så att den inte bara printar fältets payload som Json till skärmen.
+//            if (clientRequest.getFile().equals("/") && clientRequest.isPost()) {
+////                System.out.println(clientRequest.payload.toString());
+//                System.out.println(storageController.getStorage().findFirstPerson(clientRequest.payload.toString()));
+//            }
             //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {
                 if (verbose) {

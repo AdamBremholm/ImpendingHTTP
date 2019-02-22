@@ -4,6 +4,8 @@ import org.ia.util.ClientRequest;
 import org.ia.util.Person;
 import org.json.simple.JSONArray;
 
+import java.util.ArrayList;
+
 
 public interface Storage {
 
@@ -13,7 +15,7 @@ public interface Storage {
     void close();
     void addPerson(Person person);
     String findFirstPerson(String searchParam);
-    JSONArray findAllPersons();
+    ArrayList<String> findAllPersons();
     int getPersonCount();
 
 

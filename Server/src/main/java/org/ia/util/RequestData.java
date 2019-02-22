@@ -1,6 +1,8 @@
 package org.ia.util;
 
-public class RequestData {
+import java.io.Serializable;
+
+public class RequestData implements Serializable {
 
     public RequestData(String type, String value) {
         this.type = type;

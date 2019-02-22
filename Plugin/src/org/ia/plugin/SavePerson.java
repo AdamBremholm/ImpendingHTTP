@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.ia.util.StorageController.storage;
 
-@Adress("/v1/SaveToDB")
-public class SaveToDB implements ImpendingInterface {
+
+@Adress("/v1/SavePerson")
+public class SavePerson implements ImpendingInterface {
 
     @Override
     public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {
@@ -27,8 +29,8 @@ public class SaveToDB implements ImpendingInterface {
                 "<html>\n" +
                 "<body>\n" +
                 "\n" +
-                "<h1>Add a person to our storage here: </h1>\n" +
-                "<form action=\"/v1/SaveToDB\" method=\"post\" onsubmit=\"submitFunction()\">\n" +
+                "<h1>Add a person here: </h1>\n" +
+                "<form action=\"/v1/SavePerson\" method=\"post\" onsubmit=\"submitFunction()\">\n" +
                 "    Full name:<br>\n" +
                 "    <input type=\"text\" id=\"fullName\" name=\"fullName\" value=\"fullName\">\n" +
                 "    <br><br>\n" +
@@ -56,12 +58,13 @@ public class SaveToDB implements ImpendingInterface {
             person.setDateOfBirth(jsonObject.get("dateOfBirth").toString());
 
 
+
             String htmlString2 = "<!DOCTYPE html>\n" +
                     "<html>\n" +
                     "<body>\n" +
                     "\n" +
-                    "<h1>Add a person to our storage here: </h1>\n" +
-                    "<form action=\"/v1/SaveToDB\" method=\"post\" onsubmit=\"submitFunction()\">\n" +
+                    "<h1>Add a person here: </h1>\n" +
+                    "<form action=\"/v1/SavePerson\" method=\"post\" onsubmit=\"submitFunction()\">\n" +
                     "    Full name:<br>\n" +
                     "    <input type=\"text\" id=\"fullName\" name=\"fullName\" value=\"fullName\">\n" +
                     "    <br><br>\n" +

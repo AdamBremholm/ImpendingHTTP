@@ -13,6 +13,7 @@ import org.ia.api.Storage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -43,12 +44,12 @@ public class MongoDB implements Storage {
         mongoLogger = Logger.getLogger("org.mongodb.driver");
         mongoLogger.setLevel(Level.SEVERE);
         database = mongo.getDatabase("ImpendingHTTP");
-        collection = database.getCollection("stats");
+        collection = database.getCollection("statistics");
         personCollection = database.getCollection("persons");
     }
 
     public int getRequestCount() {
-        return (int) database.getCollection("stats").countDocuments();
+        return (int) database.getCollection("statistics").countDocuments();
     }
 
     @Override
@@ -135,4 +136,26 @@ public class MongoDB implements Storage {
         ((MongoCursor) it).close(); // Håll koll - ska den stängas? Kan ge fel.
         return sb.toString();
     }
+
+
+    public JSONArray getRequestsAsJsonArray() {
+        StringBuilder sb = new StringBuilder();
+        FindIterable<Document> iterDoc = collection.find();
+        int i = 1;
+        JSONArray jsonArray = new JSONArray();
+        JSONParser jsonParser = new JSONParser();
+
+        Iterator it = iterDoc.iterator();
+        while (it.hasNext()) {
+            try {
+                jsonArray.add((JSONObject) jsonParser.parse(it.next().toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            i++;
+        }
+        ((MongoCursor) it).close(); // Håll koll - ska den stängas? Kan ge fel.
+        return jsonArray;
+    }
+
 }

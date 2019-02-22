@@ -1,3 +1,5 @@
 org.ia.plugin.DynamicWebPage
 org.ia.plugin.JsonWriter
-org.ia.plugin.SaveToDB
+org.ia.plugin.SaveToDBPlugin
+org.ia.plugin.UpsertPlugin
+org.ia.plugin.FindInDBPlugin

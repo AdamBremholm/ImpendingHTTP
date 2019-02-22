@@ -1,19 +1,14 @@
 package org.ia.util;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+
+//* POJO for storing in database.
+// */
 
 public class Person implements Serializable {
     String name, address, dateOfBirth;
 
     public Person(){}
-
-    public Person(String name, String address, String dateOfBirth) {
-        this.name = name;
-        this.address = address;
-        this.dateOfBirth = dateOfBirth;
-    }
 
     public String getName() {
         return name;

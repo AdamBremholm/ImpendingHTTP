@@ -16,6 +16,11 @@ import java.util.List;
 import static org.ia.util.StorageController.storage;
 
 
+//*  TODO: Adam, används den? Isf Javadoc :)
+//
+//
+// */
+
 @Adress("/v1/SavePerson")
 public class SavePerson implements ImpendingInterface {
 
@@ -23,7 +28,6 @@ public class SavePerson implements ImpendingInterface {
     public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {
 
         Person person = new Person();
-
 
         String htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n" +
@@ -48,16 +52,12 @@ public class SavePerson implements ImpendingInterface {
                 "</body>\n" +
                 "</html>\n";
 
-
-
         if (clientRequest.isPost()) {
 
             JSONObject jsonObject = JsonParser.formatSlicedUrl(clientRequest.getPayloadString());
             person.setName(jsonObject.get("fullName").toString());
             person.setAdress(jsonObject.get("address").toString());
             person.setDateOfBirth(jsonObject.get("dateOfBirth").toString());
-
-
 
             String htmlString2 = "<!DOCTYPE html>\n" +
                     "<html>\n" +
@@ -88,17 +88,12 @@ public class SavePerson implements ImpendingInterface {
             }
 
         } else {
-
-        try {
-            serverResponse.sendPostHTML(htmlString);
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                serverResponse.sendPostHTML(htmlString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        }
-
-
         return serverResponse;
     }
-
 }

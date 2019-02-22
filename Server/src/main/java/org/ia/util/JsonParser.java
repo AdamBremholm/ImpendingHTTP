@@ -7,11 +7,11 @@ import org.json.simple.parser.ParseException;
 
 public class JsonParser {
 
-    //*JsonParser.
+    //*
     // sliceUrl: Takes url that contains a ?, removes everything before the ?.
     // formatSlicedUrl: Takes sliced url, replaces = and & with relevant Json symbols.
     // urlToFormattedString: Simple sliceUrl + formatSlicedUrl. Use with any raw url to get string back.
-    // formattedUrlToJson: Takes url with relevant symbols, returns as Json object. Used to read BODY json.
+    // formattedUrlToJson: Takes url with relevant symbols, returns as Json object. Used to read payload json.
     // */
 
     //Splits fileRequested url at ?, returns second half
@@ -23,11 +23,9 @@ public class JsonParser {
             firstHalf = strArray[0];
             secondHalf = strArray[1];
         }
-
         if (secondHalf.length() > 1) {
             return secondHalf;
         } else return firstHalf;
-
     }
 
     public static JSONObject formatSlicedUrl(String slicedUrl) {
@@ -47,28 +45,10 @@ public class JsonParser {
             System.out.println(obj);
         } catch (ParseException e) {
             e.printStackTrace();
-        }
-        return obj;
+        } return obj;
     }
 
     public static String urlToFormattedString(String url) {
         return formatSlicedUrl(sliceUrl(url)).toString();
-    }
-
-
-    public static JSONObject makeJsonObject(String key, String value) {
-        JSONObject obj = new JSONObject();
-        obj.put(key, value);
-
-        return obj;
-    }
-
-    public static JSONArray makeJsonArray(JSONObject... jsonObjects) {
-        JSONArray list = new JSONArray();
-
-        for (JSONObject object: jsonObjects) {
-            list.add(object);
-        }
-        return list;
     }
 }

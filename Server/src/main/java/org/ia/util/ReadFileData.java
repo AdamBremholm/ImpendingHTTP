@@ -3,6 +3,9 @@ package org.ia.util;
 import java.io.*;
 import java.util.Date;
 
+//* Keeps track of how to handle requested type.
+// */
+
 public class ReadFileData {
 
     private static boolean verbose = true;
@@ -18,7 +21,6 @@ public class ReadFileData {
             if (fileIn != null)
                 fileIn.close();
         }
-
         return fileData;
     }
 
@@ -51,7 +53,6 @@ public class ReadFileData {
         else
             return "text/plain";
     }
-
 
     void fileNotFound(PrintWriter out, OutputStream dataOut, String fileRequested) throws IOException {
         File file = new File(ResourceConfig.WEB_ROOT, ResourceConfig.FILE_NOT_FOUND);

@@ -9,6 +9,10 @@ import java.io.IOException;
 
 import static org.ia.util.StorageController.storage;
 
+//* Returns the first person that matches form input from the database.
+// Reads POST payload, makes serverResponse send it as POST payload.
+// */
+
 @Adress("/v1/Person")
 public class FindInDBPlugin implements ImpendingInterface {
     @Override

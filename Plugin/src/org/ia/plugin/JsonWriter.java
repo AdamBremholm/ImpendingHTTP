@@ -9,6 +9,8 @@ import java.io.IOException;
 @Adress("/v1/JsonWriter")
 public class JsonWriter implements org.ia.api.ImpendingInterface {
 
+    //* Sends name=Adam with POST body.
+    // */
 
     @Override
     public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {

@@ -5,7 +5,6 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters.*;
 
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
@@ -15,11 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -27,7 +22,11 @@ import java.util.stream.StreamSupport;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Projections.*;
+
+//* Mongo database. Connects to remote database.
+// All HTTP-requests are saved, as well as all persons added through the form.
+//
+// */
 
 public class MongoDB implements Storage {
 
@@ -54,7 +53,9 @@ public class MongoDB implements Storage {
 
     @Override
     public void close() {
-
+        System.out.println("Hello, I'm a close method. I'm never called for the mongoDB. " +
+                "I should probably be used to close all mongo cursors and the connection to the remote server," +
+                "but Patrik prioritized other things over making that happen. #sorrynotsorry");
     }
 
     @Override
@@ -70,7 +71,7 @@ public class MongoDB implements Storage {
         doc.append("address",person.getAddress());
         doc.append("dateOfBirth",person.getDateOfBirth());
 
-        personCollection.replaceOne( query, doc, new UpdateOptions().upsert(true));
+        personCollection.replaceOne( query, doc, new UpdateOptions().upsert(true)); //Unsafe method. But.. still. It works.
     }
 
     @Override
@@ -82,22 +83,25 @@ public class MongoDB implements Storage {
                 eq ("address",obj.get("address").toString()),
                 eq ("dateOfBirth",obj.get("dateOfBirth").toString()))).first();
         return doc.toJson();
-
     }
 
     @Override
-    public ArrayList<String> findAllPersons() {
-        ArrayList<String> list = new ArrayList<>();
-//
-//        FindIterable<Document> results = personCollection.find(); //.projection(excludeId());
-//        MongoCursor<Document> cursor = results.iterator();
-//
-//        while (cursor.hasNext()) {
-//            list.add(cursor.next().toJson());
-//        }
-//        cursor.close(); // Håll koll - ska den stängas? Kan ge fel.
-        return list;
+    public JSONArray findAllPersons() {
+
+        JSONParser parser = new JSONParser();
+        JSONArray array = null;
+
+        String t = StreamSupport.stream(personCollection.find().spliterator(), false)
+                .map(Document::toJson)
+                .collect(Collectors.joining(", ", "[", "]"));
+        try {
+            array = (JSONArray)parser.parse(t);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return array;
     }
+
 
     @Override
     public int getPersonCount() {
@@ -125,7 +129,7 @@ public class MongoDB implements Storage {
             sb.append(it.next() + "\n");
             i++;
         }
-        ((MongoCursor) it).close(); // Håll koll - ska den stängas? Kan ge fel.
+        ((MongoCursor) it).close();
         return sb.toString();
     }
 
@@ -143,17 +147,14 @@ public class MongoDB implements Storage {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return array;
     }
-
 
     public JSONObject getRequestsAsJsonObject() {
 
         String t = StreamSupport.stream(collection.find().spliterator(), false)
                 .map(Document::toJson)
                 .collect(Collectors.joining(",", "{", "}"));
-
 
         System.out.println("String t: " + t);
 
@@ -165,10 +166,6 @@ public class MongoDB implements Storage {
             e.printStackTrace();
         }
 
-
-
         return jsonObject;
     }
-
-
 }

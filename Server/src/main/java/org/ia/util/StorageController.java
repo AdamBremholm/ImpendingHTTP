@@ -9,8 +9,4 @@ public class StorageController {
     public StorageController(Storage storage) {
         this.storage = storage;
     }
-
-    public Storage getStorage() {
-        return storage;
-    }
 }

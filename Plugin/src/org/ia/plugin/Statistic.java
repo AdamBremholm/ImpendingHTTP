@@ -18,6 +18,9 @@ import java.util.stream.Stream;
 
 import static org.ia.util.StorageController.storage;
 
+//* Prints various server statistics.
+// Reads all request HEAD from database and parses into something more interesting.
+// */
 
 @Adress("/v1/Statistic")
 public class Statistic implements org.ia.api.ImpendingInterface {

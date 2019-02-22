@@ -10,6 +10,10 @@ import org.json.simple.JSONObject;
 
 import static org.ia.util.StorageController.storage;
 
+//* Adds person to the database with data from form.
+// Reads from POST payload, adds to database.
+// */
+
 @Adress("/v1/Person")
 public class UpsertPlugin implements ImpendingInterface {
     @Override

@@ -8,6 +8,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//* Mostly (shamelessly) stolen. Not implemented, just here to show versatility?
+//
+// */
+
 public class ListStorage implements Storage {
 
     List<ClientRequest> requests = new ArrayList<>();
@@ -53,7 +57,7 @@ public class ListStorage implements Storage {
     }
 
     @Override
-    public ArrayList<String> findAllPersons() {
+    public JSONArray findAllPersons() {
         return null;
     }
 
@@ -64,11 +68,6 @@ public class ListStorage implements Storage {
 
     @Override
     public JSONArray getRequestsAsJsonArray() {
-        return null;
-    }
-
-    @Override
-    public JSONObject getRequestsAsJsonObject() {
         return null;
     }
 

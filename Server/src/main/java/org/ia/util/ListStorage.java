@@ -61,6 +61,11 @@ public class ListStorage implements Storage {
         return persons.size();
     }
 
+    @Override
+    public JSONArray getRequestsAsJsonArray() {
+        return null;
+    }
+
     private void loadFromFile() {
         String path = System.getProperty("user.home")
                 + File.separator + "Documents"

@@ -17,6 +17,7 @@ public interface Storage {
     String findFirstPerson(String searchParam);
     ArrayList<String> findAllPersons();
     int getPersonCount();
+    JSONArray getRequestsAsJsonArray();
 
 
 }

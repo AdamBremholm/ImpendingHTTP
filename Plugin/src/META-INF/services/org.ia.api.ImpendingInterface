@@ -2,5 +2,5 @@ org.ia.plugin.DynamicWebPage
 org.ia.plugin.JsonWriter
 org.ia.plugin.UpsertPlugin
 org.ia.plugin.FindInDBPlugin
-org.ia.plugin.SaveToDB
-org.ia.plugin.TestPlugin
+org.ia.plugin.SavePerson
+org.ia.plugin.Statistic

@@ -28,22 +28,34 @@ public class ClientConnection implements Runnable {
     }
     ReadFileData readFileData = new ReadFileData();
 
-    StorageController storageController = new StorageController(new MongoDB());
+
+
+
 
 
     @Override
     public void run() {
+
+        StorageController storageController;
+        if (ResourceConfig.STORAGE_METHOD.equals("list")) {
+            storageController = new StorageController(new ListStorage());
+        } else {
+            storageController = new StorageController(new MongoDB());
+        }
+
         ClientRequest clientRequest = new ClientRequest(connect);
         ServerResponse serverResponse = new ServerResponse(connect, readFileData);
 //
 //        PrintWriter out = null;
 //        BufferedOutputStream dataOut = null;
 
+
         try {
             //In, out and dataOut
             clientRequest.initReaders();
             serverResponse.initWriters();
 
+            storage.addRequest(clientRequest);
 
             //TODO: DB search från find-button. Hade velat göra om find till att den kollar hela formuläret och gör
             //en ny Person om det inte redan finns en. 1 Sök, 2 Skapa. Skicka genom plugins. Note: Kan inte ligga i en

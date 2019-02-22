@@ -21,7 +21,7 @@ public class SaveToDB implements ImpendingInterface {
     public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {
 
         Person person = new Person();
-      // final List<Person> personList = new ArrayList<>(); Se om man kan göra en lösning med arrayList
+
 
         String htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n" +

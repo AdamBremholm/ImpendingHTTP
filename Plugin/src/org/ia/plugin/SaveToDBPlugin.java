@@ -9,6 +9,8 @@ import org.ia.util.ServerResponse;
 import java.io.IOException;
 import java.util.Date;
 
+import static org.ia.util.StorageController.storage;
+
 
 @Adress("/v1/SaveToDB")
 public class SaveToDBPlugin implements ImpendingInterface {

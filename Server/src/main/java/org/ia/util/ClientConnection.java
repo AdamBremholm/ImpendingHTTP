@@ -9,10 +9,15 @@ import org.ia.api.ImpendingInterface;
 import java.io.*;
 import java.net.Socket;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.ServiceLoader;
 import java.net.MalformedURLException;
 
+import static org.ia.util.StorageController.storage;
+
 public class ClientConnection implements Runnable {
+
+    public static ArrayList<ImpendingInterface> Plugins = new ArrayList<ImpendingInterface>();
 
     static final boolean verbose = true;
 
@@ -24,6 +29,7 @@ public class ClientConnection implements Runnable {
     ReadFileData readFileData = new ReadFileData();
 
     StorageController storageController = new StorageController(new MongoDB());
+
 
     @Override
     public void run() {
@@ -41,11 +47,12 @@ public class ClientConnection implements Runnable {
 
             //TODO: DB search från find-button. Hade velat göra om find till att den kollar hela formuläret och gör
             //en ny Person om det inte redan finns en. 1 Sök, 2 Skapa. Skicka genom plugins. Note: Kan inte ligga i en
-            //sån if, måste hamna i rätt /, så att den inte bara printar fältets payload som Json till skärmen.
-//            if (clientRequest.getFile().equals("/") && clientRequest.isPost()) {
-////                System.out.println(clientRequest.payload.toString());
-//                System.out.println(storageController.getStorage().findFirstPerson(clientRequest.payload.toString()));
-//            }
+            //sån if, måste hamna i rätt /, så att den inte bara printar fältets payload som
+            // Json till skärmen.
+            if (clientRequest.getFile().equals("/") && clientRequest.isPost()) {
+//                System.out.println(clientRequest.payload.toString());
+
+            }
             //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {
                 if (verbose) {

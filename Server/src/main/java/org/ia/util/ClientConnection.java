@@ -126,10 +126,20 @@ public class ClientConnection implements Runnable {
                 ServiceLoader<ImpendingInterface> loader =
                         ServiceLoader.load(ImpendingInterface.class, ucl);
 
+                int i = 0;
+
                 for (ImpendingInterface impendingInterfaceImplementation : loader) {
                     if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equalsIgnoreCase(clientRequest.getFile())) {
                         impendingInterfaceImplementation.execute(clientRequest, serverResponse);
+                        i++;
                     }
+                }
+                if (i==0) {
+                    //Om inget plugin hittas, 404 file not found.
+                    clientRequest.setFile("/" + ResourceConfig.FILE_NOT_FOUND);
+                    serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
+                    File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
+                    serverResponse.sendGet(file);
 
                 }
 

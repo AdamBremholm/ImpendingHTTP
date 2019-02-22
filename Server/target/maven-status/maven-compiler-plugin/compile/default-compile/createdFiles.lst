@@ -1,0 +1,10 @@
+org/ia/util/JsonParser.class
+org/ia/util/ClientConnection.class
+org/ia/util/ClientRequest.class
+org/ia/api/ImpendingInterface.class
+org/ia/Main.class
+org/ia/Main$1.class
+org/ia/util/ResourceConfig.class
+org/ia/util/JavaHTTPServer.class
+org/ia/api/Adress.class
+org/ia/util/ReadFileData.class

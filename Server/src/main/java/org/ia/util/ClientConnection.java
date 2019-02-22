@@ -9,10 +9,15 @@ import org.ia.api.ImpendingInterface;
 import java.io.*;
 import java.net.Socket;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.ServiceLoader;
 import java.net.MalformedURLException;
 
+import static org.ia.util.StorageController.storage;
+
 public class ClientConnection implements Runnable {
+
+    public static ArrayList<ImpendingInterface> Plugins = new ArrayList<ImpendingInterface>();
 
     static final boolean verbose = true;
 
@@ -24,6 +29,7 @@ public class ClientConnection implements Runnable {
     ReadFileData readFileData = new ReadFileData();
 
     StorageController storageController = new StorageController(new MongoDB());
+
 
     @Override
     public void run() {
@@ -38,11 +44,15 @@ public class ClientConnection implements Runnable {
             clientRequest.initReaders();
             serverResponse.initWriters();
 
-            //DATABASE TESTING, mongoDB statistics
-//            storageController.getStorage().addRequest(clientRequest);
-//            System.out.println(storageController.getStorage().getRequests());
-//            System.out.println("Number of requests made: " + storageController.getStorage().getRequestCount());
 
+            //TODO: DB search från find-button. Hade velat göra om find till att den kollar hela formuläret och gör
+            //en ny Person om det inte redan finns en. 1 Sök, 2 Skapa. Skicka genom plugins. Note: Kan inte ligga i en
+            //sån if, måste hamna i rätt /, så att den inte bara printar fältets payload som
+            // Json till skärmen.
+            if (clientRequest.getFile().equals("/") && clientRequest.isPost()) {
+//                System.out.println(clientRequest.payload.toString());
+
+            }
             //Skickar 501 om man skickar något annat än get head eller post
             if (!clientRequest.isGetOrHeadOrPost()) {
                 if (verbose) {
@@ -119,10 +129,20 @@ public class ClientConnection implements Runnable {
                 ServiceLoader<ImpendingInterface> loader =
                         ServiceLoader.load(ImpendingInterface.class, ucl);
 
+                int i = 0;
+
                 for (ImpendingInterface impendingInterfaceImplementation : loader) {
                     if (impendingInterfaceImplementation.getClass().getAnnotation(Adress.class).value().equalsIgnoreCase(clientRequest.getFile())) {
                         impendingInterfaceImplementation.execute(clientRequest, serverResponse);
+                        i++;
                     }
+                }
+                if (i==0) {
+                    //Om inget plugin hittas, 404 file not found.
+                    clientRequest.setFile("/" + ResourceConfig.FILE_NOT_FOUND);
+                    serverResponse.setContentType(readFileData.getContentType(clientRequest.getFile()));
+                    File file = new File(ResourceConfig.WEB_ROOT, clientRequest.getFile());
+                    serverResponse.sendGet(file);
 
                 }
 

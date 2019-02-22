@@ -1,14 +1,18 @@
 package org.ia.util;
 
-public class Person {
-    String age, name, adress, dateOfBirth;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-    public String getAge() {
-        return age;
-    }
+public class Person implements Serializable {
+    String name, address, dateOfBirth;
 
-    public void setAge(String age) {
-        this.age = age;
+    public Person(){}
+
+    public Person(String name, String address, String dateOfBirth) {
+        this.name = name;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getName() {
@@ -19,12 +23,22 @@ public class Person {
         this.name = name;
     }
 
-    public String getAdress() {
-        return adress;
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":\"" + name +
+                "\",\"address\":\"" + address +
+                ",\"dateOfBirth\":\"" + dateOfBirth +
+                "\"" +
+                "}";
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public void setAdress(String adress) {
-        this.adress = adress;
+        this.address = adress;
     }
 
     public String getDateOfBirth() {

@@ -4,7 +4,7 @@ import org.ia.api.Storage;
 
 public class StorageController {
 
-    private Storage storage;
+    public static Storage storage;
 
     public StorageController(Storage storage) {
         this.storage = storage;

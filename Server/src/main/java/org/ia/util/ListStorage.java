@@ -1,6 +1,7 @@
 package org.ia.util;
 
 import org.ia.api.Storage;
+import org.json.simple.JSONArray;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -8,8 +9,8 @@ import java.util.List;
 
 public class ListStorage implements Storage {
 
-    ArrayList<ClientRequest> requests = new ArrayList<>();
-
+    List<ClientRequest> requests = new ArrayList<>();
+    List<Person> persons = new ArrayList<>();
     public ListStorage(){
         //Läs in sparade kunder från fil
         loadFromFile();
@@ -32,6 +33,32 @@ public class ListStorage implements Storage {
 
     public void close(){
         saveToFile();
+    }
+
+    @Override
+    public void addPerson(Person person) {
+        persons.add(person);
+    }
+
+    @Override
+    public String findFirstPerson(String searchParam) {
+
+        for (Person person: persons) {
+            if (searchParam.equalsIgnoreCase(searchParam)) {
+                return person.toString();
+            }
+        }
+        return searchParam + " not found.";
+    }
+
+    @Override
+    public ArrayList<String> findAllPersons() {
+        return null;
+    }
+
+    @Override
+    public int getPersonCount() {
+        return persons.size();
     }
 
     private void loadFromFile() {

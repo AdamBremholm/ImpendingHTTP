@@ -1,6 +1,11 @@
 package org.ia.api;
 
 import org.ia.util.ClientRequest;
+import org.ia.util.Person;
+import org.json.simple.JSONArray;
+
+import java.util.ArrayList;
+
 
 public interface Storage {
 
@@ -8,6 +13,10 @@ public interface Storage {
     String getRequests();
     int getRequestCount();
     void close();
+    void addPerson(Person person);
+    String findFirstPerson(String searchParam);
+    ArrayList<String> findAllPersons();
+    int getPersonCount();
 
 
 }

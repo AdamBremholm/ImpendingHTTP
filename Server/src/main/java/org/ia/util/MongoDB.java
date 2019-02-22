@@ -65,7 +65,8 @@ public class MongoDB implements Storage {
         query.append("address",person.getAddress());
         query.append("dateOfBirth",person.getDateOfBirth());
 
-//        doc.put("_id",(int)personCollection.countDocuments()+1);
+
+//        doc.append("_id",(int)personCollection.countDocuments()+1);
         doc.append("name",person.getName());
         doc.append("address",person.getAddress());
         doc.append("dateOfBirth",person.getDateOfBirth());
@@ -76,7 +77,7 @@ public class MongoDB implements Storage {
 //                eq ("dateOfBirth",person.getDateOfBirth())),
 
 //        personCollection.insertOne(doc);
-        personCollection.updateOne( query, doc, new UpdateOptions().upsert(true));
+        personCollection.replaceOne( query, doc, new UpdateOptions().upsert(true));
 //        personCollection.updateOne(doc, doc);
     }
 

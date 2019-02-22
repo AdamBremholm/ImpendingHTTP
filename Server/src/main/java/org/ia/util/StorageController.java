@@ -1,6 +1,6 @@
 package org.ia.util;
 
-import org.ia.api.Storage;
+import database.Storage;
 
 public class StorageController {
 

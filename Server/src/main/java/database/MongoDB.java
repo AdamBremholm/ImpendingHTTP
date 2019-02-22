@@ -1,4 +1,4 @@
-package org.ia.util;
+package database;
 
 import com.mongodb.*;
 import com.mongodb.client.FindIterable;
@@ -8,7 +8,10 @@ import com.mongodb.client.MongoDatabase;
 
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
-import org.ia.api.Storage;
+import org.ia.util.ClientRequest;
+import org.ia.util.JsonParser;
+import org.ia.util.Person;
+import org.ia.util.RequestData;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

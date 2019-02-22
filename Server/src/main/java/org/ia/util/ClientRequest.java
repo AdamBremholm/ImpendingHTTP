@@ -12,14 +12,14 @@ import java.util.StringTokenizer;
 
 public class ClientRequest {
 
-    String method;
-    String file = null;
-    Socket connect;
-    StringBuilder payload;
-    String contentType;
-    List<RequestData> requestDataList;
+    public String method;
+    public String file = null;
+    public Socket connect;
+    public StringBuilder payload;
+    public String contentType;
+    public List<RequestData> requestDataList;
 
-    BufferedReader in = null;
+    public BufferedReader in = null;
     private String protocol;
 
     public void initReaders() throws IOException {

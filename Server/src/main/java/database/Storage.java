@@ -1,4 +1,4 @@
-package org.ia.api;
+package database;
 
 import org.ia.util.ClientRequest;
 import org.ia.util.Person;
@@ -15,6 +15,4 @@ public interface Storage {
     JSONArray findAllPersons();
     int getPersonCount();
     JSONArray getRequestsAsJsonArray();
-
-
 }

@@ -1,8 +1,8 @@
-package org.ia.util;
+package database;
 
-import org.ia.api.Storage;
+import org.ia.util.ClientRequest;
+import org.ia.util.Person;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;

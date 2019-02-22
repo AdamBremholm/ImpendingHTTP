@@ -5,6 +5,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters.*;
 
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
@@ -14,13 +15,19 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Projections.*;
 
 public class MongoDB implements Storage {
 
@@ -124,23 +131,44 @@ public class MongoDB implements Storage {
 
 
     public JSONArray getRequestsAsJsonArray() {
-        StringBuilder sb = new StringBuilder();
-        FindIterable<Document> iterDoc = collection.find();
-        int i = 1;
-        JSONArray jsonArray = new JSONArray();
-        JSONParser jsonParser = new JSONParser();
 
-        Iterator it = iterDoc.iterator();
-        while (it.hasNext()) {
-            try {
-                jsonArray.add((JSONObject) jsonParser.parse(it.next().toString()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            i++;
+        String t = StreamSupport.stream(collection.find().spliterator(), false)
+                .map(Document::toJson)
+                .collect(Collectors.joining(", ", "[", "]"));
+
+        JSONParser parser = new JSONParser();
+        JSONArray array = null;
+        try {
+            array = (JSONArray)parser.parse(t);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        ((MongoCursor) it).close(); // Håll koll - ska den stängas? Kan ge fel.
-        return jsonArray;
+
+        return array;
     }
+
+
+    public JSONObject getRequestsAsJsonObject() {
+
+        String t = StreamSupport.stream(collection.find().spliterator(), false)
+                .map(Document::toJson)
+                .collect(Collectors.joining(",", "{", "}"));
+
+
+        System.out.println("String t: " + t);
+
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = (JSONObject)parser.parse(t);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return jsonObject;
+    }
+
 
 }

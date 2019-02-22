@@ -172,7 +172,7 @@ public class ClientConnection implements Runnable {
 
         } catch (FileNotFoundException fnfe) {
             try {
-                readFileData.fileNotFound(serverResponse.getOut(), serverResponse.getDataOut(), clientRequest.getFile()); //TODO: Error här
+                readFileData.fileNotFound(serverResponse.getOut(), serverResponse.getDataOut(), clientRequest.getFile());
             } catch (IOException ioe) {
                 System.err.println("Error with file not found exception : " + ioe.getMessage());
             }

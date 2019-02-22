@@ -8,4 +8,6 @@ public interface ImpendingInterface {
 
     ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse);
     //Ska returna serverrespone
+
+    //TODO: Metod för att ta in ArrayList, Storage mm.
 }

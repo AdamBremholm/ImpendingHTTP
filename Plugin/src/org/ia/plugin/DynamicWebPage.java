@@ -4,14 +4,15 @@ import org.ia.api.Adress;
 import org.ia.util.ClientRequest;
 import org.ia.util.ServerResponse;
 
-
 import java.io.IOException;
 import java.util.Date;
-
 
 @Adress("/v1/DynamicWebPage")
 public class DynamicWebPage implements org.ia.api.ImpendingInterface {
 
+    //* TODO: Adam, vad tusan gör den? Läser POST payload och skickar ut den dynamiska sidan? Skriv javadoc :p
+    //
+    // */
 
     @Override
     public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {

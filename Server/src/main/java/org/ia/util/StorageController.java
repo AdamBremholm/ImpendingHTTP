@@ -1,6 +1,6 @@
 package org.ia.util;
 
-import org.ia.api.Storage;
+import database.Storage;
 
 public class StorageController {
 
@@ -8,9 +8,5 @@ public class StorageController {
 
     public StorageController(Storage storage) {
         this.storage = storage;
-    }
-
-    public Storage getStorage() {
-        return storage;
     }
 }

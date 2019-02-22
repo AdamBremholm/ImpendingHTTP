@@ -4,9 +4,9 @@
 
 <h2>Enter your details.</h2>
 
-<form action="/" method="post" onsubmit="submitFunction()">
+<form action="/v1/Person" method="post" onsubmit="submitFunction()">
     Full name:<br>
-    <input type="text" id="fullName" name="fullName" value="fullName">
+    <input type="text" id="name" name="name" value="fullName">
     <br><br>
     Adress:<br>
     <input type="text" name="address" id="address" value="address">
@@ -15,18 +15,8 @@
     <input type="text" name="dateOfBirth" id="dateOfBirth" value="dateOfBirth">
     <br><br>
     Gender<br>
-    <select name="gender">
-        <option id="Male" value="Male"> Male</option>
-        <option id="Female" value="Female">Female</option>
-    </select>
     <br><br>
-    <input type="submit" value="Add">
-</form>
-
-<form action="/v1/Person" method="post">
-    <label for="search">Search customer by name:</label>
-    <input type="search" id="search" name="name" aria-label="Search through the database for customer.">
-    <button>Find</button>
+    <input type="submit" value="Search or Add">
 </form>
 
 <script>

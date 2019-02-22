@@ -11,12 +11,12 @@ import java.util.List;
 public class ServerResponse {
 
     String serverName = "Impending Server";
+    String contentType;
     Socket connect;
     byte[] jsonBytes;
     ReadFileData readFileData;
     PrintWriter out = null;
     BufferedOutputStream dataOut = null;
-
 
     public String getContentType() {
         return contentType;
@@ -26,22 +26,15 @@ public class ServerResponse {
         this.contentType = contentType;
     }
 
-    public String getContentLength() {
-        return contentLength;
-    }
-
-    public void setContentLength(String contentLength) {
-        this.contentLength = contentLength;
-    }
-
-    String contentType;
-    String contentLength;
-
     public ServerResponse(Socket connect, ReadFileData readFileData) {
         this.connect = connect;
         this.readFileData = readFileData;
     }
 
+    public void initWriters() throws IOException {
+        out = new PrintWriter(connect.getOutputStream());
+        dataOut = new BufferedOutputStream(connect.getOutputStream());
+    }
 
     public void sendGet(File file) throws IOException {
 
@@ -59,11 +52,6 @@ public class ServerResponse {
 
         dataOut.write(fileData, 0, fileLength);
         dataOut.flush();
-    }
-
-    public void initWriters() throws IOException {
-        out = new PrintWriter(connect.getOutputStream());
-        dataOut = new BufferedOutputStream(connect.getOutputStream());
     }
 
     public void sendNotImplemented(ClientRequest clientRequest) throws IOException {
@@ -85,7 +73,6 @@ public class ServerResponse {
         dataOut.write(fileData, 0, fileLength);
         dataOut.flush();
     }
-
 
     public void sendPostJson() throws IOException {
 
@@ -117,25 +104,9 @@ public class ServerResponse {
         dataOut.flush();
     }
 
-    public void sendPost(ClientRequest clientRequest, File file) throws IOException {
-        byte[] fileData = ReadFileData.readFileData(file, (int)file.length());
-
-        out.println("HTTP/1.1 200 OK");
-        out.println(serverName);
-        out.println("Date: " + new Date());
-        out.println("Content-type: " + getContentType());
-        out.println("Content-length: " + fileData.length);
-        out.println(); // blank line between headers and content, very important !
-        out.flush(); // flush character output stream buffer
-
-        dataOut.write(fileData);
-        dataOut.flush();
-    }
-
-    public void sendHead(ClientRequest clientRequest, File file, ReadFileData readFileData) throws IOException {
+    public void sendHead(File file) {
 
         int fileLength = (int) file.length();
-        byte[] fileData = readFileData.readFileData(file, fileLength);
 
         // send HTTP Headers
         out.println("HTTP/1.1 200 OK");
@@ -145,10 +116,9 @@ public class ServerResponse {
         out.println("Content-length: " + fileLength);
         out.println(); // blank line between headers and content, very important !
         out.flush(); // flush character output stream buffer
-
     }
 
-    public void sendHeadJson() throws IOException {
+    public void sendHeadJson() {
 
         out.println("HTTP/1.1 200 OK");
         out.println(serverName);
@@ -157,8 +127,6 @@ public class ServerResponse {
         out.println("Content-length: " + jsonBytes.length);
         out.println(); // blank line between headers and content, very important !
         out.flush(); // flush character output stream buffer
-
-
     }
 
     //From clientRequest's stringBuilder, from POST body.
@@ -188,5 +156,9 @@ public class ServerResponse {
 
     public PrintWriter getOut() {
         return out;
+    }
+
+    public void setJsonBytes(byte[] jsonBytes) {
+        this.jsonBytes = jsonBytes;
     }
 }

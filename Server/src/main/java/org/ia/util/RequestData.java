@@ -2,14 +2,14 @@ package org.ia.util;
 
 import java.io.Serializable;
 
+//* TODO: Adam, var används den? Hur? Till vad?
+// */
+
 public class RequestData implements Serializable {
 
     public RequestData(String type, String value) {
         this.type = type;
         this.value = value;
-    }
-
-    public RequestData() {
     }
 
     private String type;
@@ -34,16 +34,8 @@ public class RequestData implements Serializable {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 }
 

@@ -1,6 +1,4 @@
-
 package org.ia.util;
-
 
 import java.io.*;
 import java.net.Socket;
@@ -8,37 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+//* Parses header information and stores it.
+// Holds verification methods, e. g. isPost.
+// */
+
 public class ClientRequest {
 
-    String method;
-    String file = null;
-    String body = null;
+    public String method;
+    public String file = null;
+    public Socket connect;
+    public StringBuilder payload;
+    public String contentType;
+    public List<RequestData> requestDataList;
 
-    public Socket getConnect() {
-        return connect;
-    }
-
-    public void setConnect(Socket connect) {
-        this.connect = connect;
-    }
-
-    public BufferedReader getIn() {
-        return in;
-    }
-
-    public void setIn(BufferedReader in) {
-        this.in = in;
-    }
-
-    Socket connect;
-    StringBuilder payload;
-    String contentType;
-    List<RequestData> requestDataList;
-
-
-    BufferedReader in = null;
+    public BufferedReader in = null;
     private String protocol;
-
 
     public void initReaders() throws IOException {
         in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
@@ -47,8 +29,7 @@ public class ClientRequest {
         String line;
         requestDataList = new ArrayList<>();
 
-        do
-        {
+        do {
             line = in.readLine();
             if (line.equals("")) break;
             //Bygger upp en lång sträng som den sparar. Används för att kunna läsa ut metoden och filen, se nedan.
@@ -62,12 +43,8 @@ public class ClientRequest {
                 String type = tokenizer.nextToken();
                 String value = tokenizer.nextToken();
                 requestDataList.add(new RequestData(type, value));
-
             }
-
-        }
-        while (true);
-
+        } while (true);
 
         StringTokenizer builderParse = new StringTokenizer(builder.toString());
         method = builderParse.nextToken().toUpperCase(); // we get the HTTP method of the client
@@ -79,10 +56,7 @@ public class ClientRequest {
         requestDataList.add(1, new RequestData("File", file));
         requestDataList.add(2, new RequestData("Protocol", protocol));
 
-
         printRequestObjectList();
-
-
 
         //kollar om det är post och om det finns en body med och kör nedre delen av readPostmetoden
         payload = new StringBuilder();
@@ -90,19 +64,16 @@ public class ClientRequest {
             while(in.ready()){
                 payload.append((char) in.read());
             }
-
             if (getPayloadString()!=null && getPayloadString().length()>0) {
                 requestDataList.add(new RequestData("Body", getPayloadString()));
             }
         }
-
     }
 
     public boolean bodyExists() {
         if (findFirstValueByType("Content-Length")!=null && !findFirstValueByType("Content-Length").equals("")) {
             return Integer.parseInt(findFirstValueByType("Content-Length")) > 0;
-        }
-        else return false;
+        } else return false;
     }
 
     public void printRequestObjectList() {
@@ -117,14 +88,7 @@ public class ClientRequest {
             value = requestDataList.stream().filter(requestData -> requestData.getType().equals(type)).findFirst().get().getValue();
         } catch (Exception e) {
             return "";
-        }
-        return value;
-
-
-    }
-
-    public String getContentType() {
-        return contentType;
+        } return value;
     }
 
     public void setContentType(String contentType) {
@@ -133,10 +97,6 @@ public class ClientRequest {
 
     public ClientRequest(Socket connect) {
         this.connect = connect;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
     }
 
     public void setFile(String file) {
@@ -172,7 +132,6 @@ public class ClientRequest {
             return true;
         } else return false;
     }
-
 
     public String getPayloadString() {
         return payload.toString();

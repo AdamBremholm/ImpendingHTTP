@@ -1,11 +1,16 @@
-package org.ia.util;
+package database;
 
-import org.ia.api.Storage;
+import org.ia.util.ClientRequest;
+import org.ia.util.Person;
 import org.json.simple.JSONArray;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+//* Mostly (shamelessly) stolen. Not implemented, just here to show versatility?
+//
+// */
 
 public class ListStorage implements Storage {
 
@@ -52,13 +57,18 @@ public class ListStorage implements Storage {
     }
 
     @Override
-    public ArrayList<String> findAllPersons() {
+    public JSONArray findAllPersons() {
         return null;
     }
 
     @Override
     public int getPersonCount() {
         return persons.size();
+    }
+
+    @Override
+    public JSONArray getRequestsAsJsonArray() {
+        return null;
     }
 
     private void loadFromFile() {

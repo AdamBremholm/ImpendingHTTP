@@ -2,6 +2,7 @@ package org.ia.util;
 
 import org.ia.api.Storage;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -63,6 +64,11 @@ public class ListStorage implements Storage {
 
     @Override
     public JSONArray getRequestsAsJsonArray() {
+        return null;
+    }
+
+    @Override
+    public JSONObject getRequestsAsJsonObject() {
         return null;
     }
 

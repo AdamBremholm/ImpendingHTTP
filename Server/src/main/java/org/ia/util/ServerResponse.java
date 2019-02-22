@@ -189,4 +189,8 @@ public class ServerResponse {
     public PrintWriter getOut() {
         return out;
     }
+
+    public void setJsonBytes(byte[] jsonBytes) {
+        this.jsonBytes = jsonBytes;
+    }
 }

@@ -4,6 +4,7 @@ import org.ia.api.Adress;
 import org.ia.util.ClientRequest;
 import org.ia.util.ServerResponse;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 
 import java.io.IOException;
@@ -26,18 +27,15 @@ public class Statistic implements org.ia.api.ImpendingInterface {
 
         JSONArray jsonArray = storage.getRequestsAsJsonArray();
 
-        Stream<String> ss = jsonArray.stream().map (json->json.toString ());
-        List<String> list = ss.collect (Collectors.toList ());
 
-
-        long postReqs = list.stream().filter(o -> o.contains("POST")).count();
-        long getReqs = list.stream().filter(o -> o.contains("GET")).count();
-        long headRequest = list.stream().filter(o -> o.contains("HEAD")).count();
-        long dynamicWebPageCount = list.stream().filter(o -> o.contains("dynamicwebpage")).count();
-        long findInDBCount = list.stream().filter(o -> o.contains("person")).count();
-        long jsonWriterCount = list.stream().filter(o -> o.contains("jsonwriter")).count();
-        long savePersonCount = list.stream().filter(o -> o.contains("saveperson")).count();
-        long statisticCount = list.stream().filter(o -> o.contains("statistic")).count();
+        long postReqs = jsonArray.stream().filter(o -> ((JSONObject) o).get("Method").equals("POST")).count();
+        long getReqs = jsonArray.stream().filter(o -> ((JSONObject) o).get("Method").equals("GET")).count();
+        long headRequest = jsonArray.stream().filter(o -> ((JSONObject) o).get("Method").equals("HEAD")).count();
+        long dynamicWebPageCount = jsonArray.stream().filter(o -> ((String) ((JSONObject) o).get("File")).contains("dynamicwebpage")).count();
+        long findInDBCount = jsonArray.stream().filter(o -> ((String) ((JSONObject) o).get("File")).contains("person")).count();
+        long jsonWriterCount = jsonArray.stream().filter(o -> ((String) ((JSONObject) o).get("File")).contains("jsonwriter")).count();
+        long savePersonCount = jsonArray.stream().filter(o -> ((String) ((JSONObject) o).get("File")).contains("saveperson")).count();
+        long statisticCount = jsonArray.stream().filter(o -> ((String) ((JSONObject) o).get("File")).contains("statistic")).count();
 
 
         String htmlString = "<!DOCTYPE html>\n" +

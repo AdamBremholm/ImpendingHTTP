@@ -1,29 +1,65 @@
 <!DOCTYPE html>
 <html>
-<body background="sunflower.png" style="background-repeat: no-repeat" style="background-size: auto">
 
-<h2>Enter your details.</h2>
+<head>
+    <link href="stylesheet.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="submitscript.js"></script>
+    <meta charset="UTF-8">
+</head>
+    <title>ImpendingHTTP</title>
+<body>
+<form action="/" method="POST">
+    <p>Impending HTTP-Server.
+        <br>
+        Av Adam Bremholm, Patrik Bågenholm och Filip Christofersson.
+        <br><br>
+        Servern kan hantera JSON i POST och GET, för att returnera som JSON eller spara till databas. <br>
+        URL kan läsas som /json?key=value&key2=value2, osv.
+        <br>
+        Databasen är en remote MongoDB, men det är möjligt att ändra till en List Storage.
+        <br>
+        Kan hantera filer från med rätt content-type <br>(PDF och PNG från länkarna, HTML/CSS visas, och JS är Javascript-knappen)
+        <br>
+        Plugins som finns: DB upsert/find, statistik om requests till servern, multiplicera två tal, DynamicWePage, SavePerson med html som payload.
 
-<form action="/v1/Person" method="post" onsubmit="submitFunction()">
-    Full name:<br>
-    <input type="text" id="name" name="name" value="fullName">
+    </p>
+    <br>
+    <a href="/v1/Statistic">Statistik om requests till servern.</a> <br>
+    <a href="/v1/DynamicWebPage">Dynamic web page</a> <br>
+    <a href="/pdf.pdf">Vill du ha en pdf? Här får du en pdf!</a> <br>
+    <a href="/sunflower.png">Visar bild. Blom-blom-blom-blomparaaaden!</a>
+
+    <p>Form to test POST method, send either to dynamic POST reading or DB</p>
+    Name:
+    <br>
+    <input type="text" name="name" id="pfullName" value="name">
     <br><br>
-    Adress:<br>
-    <input type="text" name="address" id="address" value="address">
+    Address:<br>
+    <input type="text" name="address" id="paddress" value="address">
     <br><br>
-    Date of birth:<br>
-    <input type="text" name="dateOfBirth" id="dateOfBirth" value="dateOfBirth">
+    Birth date:<br>
+    <input type="text" name="dateOfBirth" id="pdateOfBirth" value="dateOfBirth">
     <br><br>
-    Gender<br>
-    <br><br>
-    <input type="submit" value="Search or Add">
+    <button type="submit" value="submit" onclick="submitform()">Print form as JSON</button>
+    <button type="submit" formaction="/v1/Person">DB Find/Add</button>
 </form>
 
-<script>
-    function submitFunction(){
-        alert("The form has been submitted");
-    }
-</script>
-
+<form action="/json" method="GET">
+    <p>Form to test GET method, sends information with URL.</p>
+    Name:<br>
+    <input type="text" id="gName" name="name" value="name">
+    <br><br>
+    Address:<br>
+    <input type="text" name="address" id="gaddress" value="address">
+    <br><br>
+    Birth date:<br>
+    <input type="text" name="dateOfBirth" id="gdateOfBirth" value="dateOfBirth">
+    <br><br>
+    <input type="submit" value="submit" onclick="submitform()">
+    <br><br>
+</form>
+    <button onclick="openWindow()">JavaScript</button>
 </body>
+
+<a href=""></a>
 </html>

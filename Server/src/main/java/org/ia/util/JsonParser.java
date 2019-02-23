@@ -42,7 +42,6 @@ public class JsonParser {
         JSONObject obj = null;
         try {
             obj = (JSONObject) parser.parse("{\"" + formattedString + "\"}");
-            System.out.println(obj);
         } catch (ParseException e) {
             e.printStackTrace();
         } return obj;

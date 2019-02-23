@@ -18,7 +18,6 @@ public class FindInDBPlugin implements ImpendingInterface {
     @Override
     public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {
         String searchResult = storage.findFirstPerson(clientRequest.getPayloadString());
-        System.out.println(storage.findFirstPerson(clientRequest.getPayloadString()));
         byte[] jsonbytes = searchResult.getBytes();
         serverResponse.setJsonBytes(jsonbytes);
         try {

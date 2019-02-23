@@ -25,10 +25,10 @@ import java.util.stream.StreamSupport;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static org.ia.util.StorageController.storage;
 
 //* Mongo database. Connects to remote database.
 // All HTTP-requests are saved, as well as all persons added through the form.
-//
 // */
 
 public class MongoDB implements Storage {
@@ -61,20 +61,15 @@ public class MongoDB implements Storage {
                 "but Patrik prioritized other things over making that happen. #sorrynotsorry");
     }
 
+    //
     @Override
     public void addPerson(Person person) {
         Document doc = new Document();
-        BasicDBObject query = new BasicDBObject();
+        doc.put("name", person.getName());
+        doc.put("address",person.getAddress());
+        doc.put("dateOfBirth",person.getDateOfBirth());
 
-        query.append("name", person.getName());
-        query.append("address",person.getAddress());
-        query.append("dateOfBirth",person.getDateOfBirth());
-
-        doc.append("name",person.getName());
-        doc.append("address",person.getAddress());
-        doc.append("dateOfBirth",person.getDateOfBirth());
-
-        personCollection.replaceOne( query, doc, new UpdateOptions().upsert(true)); //Unsafe method. But.. still. It works.
+        personCollection.replaceOne( doc, doc, new UpdateOptions().upsert(true)); //Unsafe method. But.. still. It works.
     }
 
     @Override
@@ -118,7 +113,6 @@ public class MongoDB implements Storage {
             document.append(request.getType(), request.getValue());
         }
         collection.insertOne(document);
-        System.out.println(document);
     }
 
     @Override
@@ -158,8 +152,6 @@ public class MongoDB implements Storage {
         String t = StreamSupport.stream(collection.find().spliterator(), false)
                 .map(Document::toJson)
                 .collect(Collectors.joining(",", "{", "}"));
-
-        System.out.println("String t: " + t);
 
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = new JSONObject();

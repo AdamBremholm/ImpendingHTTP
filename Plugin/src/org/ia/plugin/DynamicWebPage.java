@@ -10,8 +10,8 @@ import java.util.Date;
 @Adress("/v1/DynamicWebPage")
 public class DynamicWebPage implements org.ia.api.ImpendingInterface {
 
-    //* TODO: Adam, vad tusan gör den? Läser POST payload och skickar ut den dynamiska sidan? Skriv javadoc :p
-    //
+    //* If user sends in a body in their post request it will display it in the raw format.
+    //  Also shows time and date :)
     // */
 
     @Override

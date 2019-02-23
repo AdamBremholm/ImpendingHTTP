@@ -16,9 +16,7 @@ import java.util.List;
 import static org.ia.util.StorageController.storage;
 
 
-//*  TODO: Adam, används den? Isf Javadoc :)
-//
-//
+//*  Sends Back a person in the post request body of the form. If body exists, it displays the person below.
 // */
 
 @Adress("/v1/SavePerson")

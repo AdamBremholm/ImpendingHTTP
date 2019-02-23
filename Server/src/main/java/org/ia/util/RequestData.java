@@ -2,8 +2,10 @@ package org.ia.util;
 
 import java.io.Serializable;
 
-//* TODO: Adam, var används den? Hur? Till vad?
-// */
+/* This is how each each item of the request that is send to the server. Put in requestDataList (Array list) to represent the headers for each request sent to server.
+The requests are later saved in our Storage.
+Same functionality as a Hash Map but ordered.
+ */
 
 public class RequestData implements Serializable {
 

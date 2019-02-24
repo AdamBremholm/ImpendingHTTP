@@ -4,3 +4,4 @@ org.ia.plugin.UpsertPlugin
 org.ia.plugin.FindInDBPlugin
 org.ia.plugin.SavePerson
 org.ia.plugin.Statistic
+org.ia.plugin.Calculator

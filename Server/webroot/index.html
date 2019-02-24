@@ -20,12 +20,15 @@
         <br>
         Kan hantera filer från med rätt content-type <br>(PDF och PNG från länkarna, HTML/CSS visas, och JS är Javascript-knappen)
         <br>
-        Plugins som finns: DB upsert/find, statistik om requests till servern, multiplicera två tal, DynamicWePage, SavePerson med html som payload.
+        Plugins som finns: DB upsert/find, statistik om requests till servern, multiplicera två tal (längst ner på sidan), DynamicWePage, SavePerson med html som payload.
 
     </p>
     <br>
     <a href="/v1/Statistic">Statistik om requests till servern.</a> <br>
-    <a href="/v1/DynamicWebPage">Dynamic web page</a> <br>
+    <a href="/v1/DynamicWebPage">Dynamic web page (Visar tiden och om post request skickats, bodyn på den)</a> <br>
+    <a href="/v1/SavePerson">Save Person Plugin (Lägger till data om en person rekursivt)  </a> <br>
+    <a href="/v1/JsonWriter">JsonWriter plugin. (Plugin som endast skriver ut json) </a> <br>
+
     <a href="/pdf.pdf">Vill du ha en pdf? Här får du en pdf!</a> <br>
     <a href="/sunflower.png">Visar bild. Blom-blom-blom-blomparaaaden!</a>
 
@@ -59,7 +62,13 @@
     <br><br>
 </form>
     <button onclick="openWindow()">JavaScript</button>
-</body>
+</body><br><br>
+<form onclick="submitFunction()" action="/v1/calculator" method="post">
+    <input type="text" name="x"> *
+    <input type="text" name="y">
+    <input type="submit" value="Calculate">
+</form>
+
 
 <a href=""></a>
 </html>

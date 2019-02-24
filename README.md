@@ -1,6 +1,8 @@
 # ImpendingHTTP
 
 Kompilera programmet genom att först göra Server och Plugin till var sin modul.  
+
+Moduler måste läggas till manuellt i IntelliJ. Server läggs till som maven modul och Plugin från source files. 
 Plugin har dependency mot Server och Maven: com.googlecode.json-simple:json-simple:1.1.1
 Servers depencencys finns i pom-filen och ska laddas ner automatiskt. (Server är maven projekt men inte Plugin).
 

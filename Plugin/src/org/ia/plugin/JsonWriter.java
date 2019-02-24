@@ -16,7 +16,7 @@ public class JsonWriter implements org.ia.api.ImpendingInterface {
     public ServerResponse execute(ClientRequest clientRequest, ServerResponse serverResponse) {
 
 
-        serverResponse.setJson("?name=Adam");
+        serverResponse.setJson("?Plugin=Working");
         try {
             serverResponse.sendPostJson();
         } catch (IOException e) {

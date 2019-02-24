@@ -31,7 +31,8 @@ public class SavePerson implements ImpendingInterface {
                 "<html>\n" +
                 "<body>\n" +
                 "\n" +
-                "<h1>Add a person here: </h1>\n" +
+                "<h1>Save Person plugin</h1>" +
+                "<p> Add a person below and it will be sent back in the body of a post request to this page and printed below<p> \n" +
                 "<form action=\"/v1/SavePerson\" method=\"post\" onsubmit=\"submitFunction()\">\n" +
                 "    Full name:<br>\n" +
                 "    <input type=\"text\" id=\"fullName\" name=\"fullName\" value=\"fullName\">\n" +
@@ -61,7 +62,8 @@ public class SavePerson implements ImpendingInterface {
                     "<html>\n" +
                     "<body>\n" +
                     "\n" +
-                    "<h1>Add a person here: </h1>\n" +
+                    "<h1>Save Person plugin</h1>" +
+                    "<p> Add a person below and it will be sent back in the body of a post request to this page and printed below<p> \n" +
                     "<form action=\"/v1/SavePerson\" method=\"post\" onsubmit=\"submitFunction()\">\n" +
                     "    Full name:<br>\n" +
                     "    <input type=\"text\" id=\"fullName\" name=\"fullName\" value=\"fullName\">\n" +

@@ -17,6 +17,13 @@ Extracted okhttp-3.13.1.jar
 Extracted okio1.17.2.jar
 Server compile output.  
 
-För att köra programmet står man i Servermappen och kör:
+För att köra programmet står man i mappen "Server" och kör:
 
 java -cp Plugin.jar org.ia.Main
+
+Om man kör direkt från IntelliJ:
+
+Main class: org.ia.Main
+Working directory: ~/IdeaProjects/ImpendingHTTP/Server
+Use classpath of module: Plugin 
+Include dependencies with provided scope.

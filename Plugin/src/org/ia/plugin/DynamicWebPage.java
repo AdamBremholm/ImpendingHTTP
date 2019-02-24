@@ -29,9 +29,28 @@ public class DynamicWebPage implements org.ia.api.ImpendingInterface {
                 "<h1>Dynamic WebPage Plugin with todays date:" + new Date() + "</h1>\n" +
                 "\n" +
                 "<p>" + "Please try to send data in postrequestbody and it will display here: (Raw)" + postbody +"</p>\n" +
+                " <form action=\"/v1/DynamicWebPage\" method=\"POST\">\n" +
+                "   \n" +
+                "    <p>If you dont have insomnia, you can try it with the form below</p>\n" +
+                "                Name:\n" +
+                "    <br>\n" +
+                "    <input type=\"text\" name=\"name\" id=\"pfullName\" value=\"name\">\n" +
+                "    <br><br>\n" +
+                "                Address:<br>\n" +
+                "    <input type=\"text\" name=\"address\" id=\"paddress\" value=\"address\">\n" +
+                "    <br><br>\n" +
+                "                Birth date:<br>\n" +
+                "    <input type=\"text\" name=\"dateOfBirth\" id=\"pdateOfBirth\" value=\"dateOfBirth\">\n" +
+                "    <br><br>\n" +
+                "    <input type=\"submit\" value=\"submit\">\n" +
+                "</form>" +
                 "\n" +
                 "</body>\n" +
                 "</html>\n";
+
+
+
+
 
         try {
             serverResponse.sendPostHTML(htmlString);
